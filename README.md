@@ -1,2 +1,2 @@
 # Timeu
-A Electron/React Timetracking App
+A Electron/React Timetracking App for Desktop/Mobile 📱 🖥  
