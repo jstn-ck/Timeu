@@ -2,3 +2,5 @@
 
 ## Author: Justin Kanwischer
 ### Status: WIP
+
+- Tools: Firebase, Typescript, React, Webpack, Electron
