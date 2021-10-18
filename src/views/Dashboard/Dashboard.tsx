@@ -4,6 +4,7 @@ import { useHistory } from "react-router";
 import "./dashboard.scss";
 import { auth, db } from "@/firebase/firebase";
 import { logout } from "@/views/Login/Login";
+import Settings from "@/components/Settings/Settings";
 
 function Dashboard() {
   const [user, loading, error] = useAuthState(auth);
@@ -36,6 +37,7 @@ function Dashboard() {
         <button className="dashboard__btn" onClick={logout}>
           Logout
         </button>
+        <Settings />
       </div>
     </div>
   );
