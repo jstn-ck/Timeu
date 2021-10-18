@@ -2,6 +2,11 @@ import './settings.scss';
 import { settingItems } from './settingItems';
 import { toggleDarkMode } from './settingFunctions';
 import React, { useState } from 'react';
+import jetpack from 'fs-jetpack';
+
+const obj = { greet: "Hello World!" };
+jetpack.write("file.json", obj);
+console.log(jetpack.read("file.json", "json"));
 
 function SettingsMenu(props: any) {
   let menuClassName: string = props.visibility ? "settings-menu active" : "settings-menu";

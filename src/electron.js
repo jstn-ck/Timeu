@@ -1,24 +1,35 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+
+let win;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
   app.quit();
 }
 
-const createWindow = () => {
+async function createWindow() {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  win = new BrowserWindow({
     width: 800, height: 600,
     minHeight: 350,
     minWidth: 500,
+    preload: path.join(__dirname, "preload.js"),
+    webPreferences: {
+      nodeIntegration: true,
+      nodeIntegrationInWorker: true,
+      enableRemoteModule: true,
+      contextIsolation: false,
+      nativeWindowOpen: true,
+    }
   });
 
   // and load the index.html of the app.
-  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  win.webContents.openDevTools();
+
 };
 
 // This method will be called when Electron has finished
@@ -42,6 +53,15 @@ app.on('activate', () => {
     createWindow();
   }
 });
+
+// ipcMain.on("toMain", (event, args) => {
+//   fs.readFile("path/to/file", (error, data) => {
+//     // Do something with file contents
+
+//     // Send result back to renderer process
+//     win.webContents.send("fromMain", responseObj);
+//   });
+// });
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.

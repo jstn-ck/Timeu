@@ -10,6 +10,7 @@ rules.push({
 });
 
 module.exports = {
+  target: 'electron-renderer',
   devtool: 'source-map',
   module: {
     rules,
