@@ -9,12 +9,10 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 }
 
 async function createWindow() {
-  // Create the browser window.
   win = new BrowserWindow({
     width: 800, height: 600,
     minHeight: 350,
     minWidth: 500,
-    preload: path.join(__dirname, "preload.js"),
     webPreferences: {
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
@@ -24,10 +22,7 @@ async function createWindow() {
     }
   });
 
-  // and load the index.html of the app.
   win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-
-  // Open the DevTools.
   win.webContents.openDevTools();
 
 };
@@ -54,14 +49,11 @@ app.on('activate', () => {
   }
 });
 
-// ipcMain.on("toMain", (event, args) => {
-//   fs.readFile("path/to/file", (error, data) => {
-//     // Do something with file contents
+// Future todo: clean typescript ipc handler(requires electron ts file)
+const userSettings = app.getPath('userData');
 
-//     // Send result back to renderer process
-//     win.webContents.send("fromMain", responseObj);
-//   });
-// });
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
+ipcMain.on('get-settings-path', (event, key) => {
+  console.log(`Main process receved ${key}.`);
+  const value = userSettings;
+  event.sender.send('response', value);
+});
