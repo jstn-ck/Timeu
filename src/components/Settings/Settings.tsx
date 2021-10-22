@@ -23,7 +23,7 @@ class SettingsMenu extends React.Component<{}, SettingsMenuState> {
     this.settingItems = props.items;
 
     this.state = {
-      darkMode: this.userSettingsObject.darkMode,
+      default: 'default',
     };
   }
 
@@ -35,23 +35,15 @@ class SettingsMenu extends React.Component<{}, SettingsMenuState> {
     const spath = this.pathToUserSettings;
 
     if (spath.read('user-preferences.json', 'json') !== undefined) {
-      this.userSettingsObject = spath.read('user-preferences.json', 'json');
-      console.log('user settings exists');
-
-      // Only set state if not matching with file
-      if (this.state !== this.userSettingsObject) {
-        this.setState(this.userSettingsObject);
-      }
-
+      this.userSettingsObject = await spath.read('user-preferences.json', 'json');
       this.applySettingsOnStartup();
-
+      console.log('user settings exists');
     } else {
       console.log('user-settings doesnt exist creating');
       const defaultSettings = {
         darkMode: true,
       };
 
-      this.setState(defaultSettings);
       await spath.writeAsync("user-preferences.json", defaultSettings).then(() => {
         this.userSettingsObject = spath.read('user-preferences.json', 'json');
       });
@@ -59,7 +51,7 @@ class SettingsMenu extends React.Component<{}, SettingsMenuState> {
   }
 
   // Send ping to main process and get app's userData path
-  async initIpc() {
+  initIpc() {
     ipcRenderer.on('response', (event, value) => {
       // console.log(`Renderer received ${value}.`);
       this.pathToUserSettings = jetpack.cwd(value);
@@ -69,46 +61,40 @@ class SettingsMenu extends React.Component<{}, SettingsMenuState> {
     ipcRenderer.send('get-settings-path', 'ping');
   }
 
-  applySettingsOnStartup() {
-    if (this.userSettingsObject.darkMode) {
+
+  async applySettingsOnStartup() {
+    const settingsObject = this.userSettingsObject;
+
+    if (await settingsObject.darkMode == true) {
       document
         .getElementsByTagName("HTML")[0]
         .setAttribute("data-theme", "dark");
-    } else {
+    } else if (await settingsObject.darkMode == false) {
       document
         .getElementsByTagName("HTML")[0]
         .setAttribute("data-theme", "light");
+    } else {
+      console.log('settings object in applySettings is undefined');
     }
   }
 
 
   // Settings Functions -------------------------
-  toggleDarkMode() {
+  async toggleDarkMode() {
     const dM = this.userSettingsObject.darkMode;
-    const dMwriteTrue = this.pathToUserSettings.write('user-preferences.json', { darkMode: true });
-    const dMwriteFalse = this.pathToUserSettings.write('user-preferences.json', { darkMode: false });
 
-    if (this.state.darkMode) {
+    if (dM === true) {
       document
         .getElementsByTagName("HTML")[0]
         .setAttribute("data-theme", "light");
-      console.log('state is true theme to light');
-      if (dM == true) {
-        dMwriteFalse;
-        this.setState({ darkMode: false });
-      } else if (dM == false || dM == undefined) {
-        dMwriteTrue;
-        this.setState({ darkMode: true });
-        this.pathToUserSettings.write('user-preferences.json', { darkMode: true });
-      }
-    } else {
-      console.log('state is false theme to dark');
+      await this.pathToUserSettings.writeAsync('user-preferences.json', { darkMode: false });
+    } else if (dM === false) {
       document
         .getElementsByTagName("HTML")[0]
         .setAttribute("data-theme", "dark");
-
-      dMwriteTrue;
-      this.setState({ darkMode: true });
+      await this.pathToUserSettings.writeAsync('user-preferences.json', { darkMode: true });
+    } else {
+      alert('settings doesnt exist');
     }
   }
   // end Settings Functions -------------------------
