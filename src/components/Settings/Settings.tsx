@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import jetpack from 'fs-jetpack';
 import { ipcRenderer } from 'electron';
 import { FSJetpack } from "fs-jetpack/types";
-import settings from 'electron-settings';
 
 
 type SettingsMenuState = any
@@ -37,7 +36,6 @@ class SettingsMenu extends React.Component<{}, SettingsMenuState> {
 
     if (spath.read('user-preferences.json', 'json') !== undefined) {
       this.userSettingsObject = await spath.read('user-preferences.json', 'json');
-      console.log(this.userSettingsObject);
       this.applySettingsOnStartup();
       console.log('user settings exists');
     } else {
@@ -83,23 +81,21 @@ class SettingsMenu extends React.Component<{}, SettingsMenuState> {
 
   // Settings Functions -------------------------
   async toggleDarkMode() {
+    this.userSettingsObject = await this.pathToUserSettings.read('user-preferences.json', 'json');
     const dM = this.userSettingsObject.darkMode;
-    console.log(dM);
 
     if (dM === true) {
-      console.log('dark mode in settings is true setting to false');
+      await this.pathToUserSettings.writeAsync('user-preferences.json', { darkMode: false });
       document
         .getElementsByTagName("HTML")[0]
         .setAttribute("data-theme", "light");
-      await this.pathToUserSettings.write('user-preferences.json', { darkMode: false });
     } else if (dM === false) {
-      console.log('dark mode is false setting to true');
+      await this.pathToUserSettings.writeAsync('user-preferences.json', { darkMode: true });
       document
         .getElementsByTagName("HTML")[0]
         .setAttribute("data-theme", "dark");
-      await this.pathToUserSettings.write('user-preferences.json', { darkMode: true });
     } else {
-      console.log('settings object doesnt exist');
+      console.log('settings doesnt exist');
     }
   }
   // end Settings Functions -------------------------
