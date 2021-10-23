@@ -1,5 +1,13 @@
 // COLORS
-$white: #fff;
+html {
+  --color-text: #fff;
+  --color-background: #1E1E1E;
+  --color-2: #212431; // 1E2022 ;
+}
 
-$color-1: #1E1E1E;
-$color-2: #212431 // 1E2022 ;
+html[data-theme="light"] {
+  --color-text: #444545;
+  --color-background: #FFFFFC;
+  --color-2: #212431;
+}
+

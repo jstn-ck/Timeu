@@ -19,8 +19,8 @@ body {
   position: relative;
   height: 100vh;
   display: block;
-  color: $white;
-  background-color: $color-1;
+  color: var(--white);
+  background-color: var(--color-background);
   overflow: hidden;
 }
 
