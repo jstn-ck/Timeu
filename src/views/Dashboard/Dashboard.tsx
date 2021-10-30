@@ -5,6 +5,7 @@ import "./dashboard.scss";
 import { auth, db } from "@/firebase/firebase";
 import { logout } from "@/views/Login/Login";
 import Settings from "@/components/Settings/Settings";
+import NetStatus from "@/components/Connectivity/Connectivity";
 
 function Dashboard() {
   const [user, loading, error] = useAuthState(auth);
@@ -30,6 +31,7 @@ function Dashboard() {
 
   return (
     <div className="dashboard">
+      <NetStatus />
       <div className="dashboard__container">
         Logged in as
         <div>Test</div>

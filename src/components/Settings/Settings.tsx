@@ -1,88 +1,116 @@
 import './settings.scss';
 import { settingItems } from './settingItems';
-import React, { useState, useEffect } from 'react';
-import jetpack from 'fs-jetpack';
+import React, { useState } from 'react';
+import * as jetpack from 'fs-jetpack';
 import { ipcRenderer } from 'electron';
 import { FSJetpack } from "fs-jetpack/types";
 
+// interface ISettingsItems {
+//   settingName: string
+//   settingFunction: string
+// }
 
-type SettingsMenuState = any
+type SettingProps = {
+  items: Array<object>,
+}
 
-class SettingsMenu extends React.Component<{}, SettingsMenuState> {
-  pathToUserSettings: any;
-  menuClassName: string;
+type SettingState = {
+  default: string,
+}
+
+interface ISettingsObject {
+  darkMode: boolean,
+}
+
+class SettingsMenu extends React.Component<SettingProps, SettingState> {
   settingItems: Array<object>;
-  userSettingsObject: any;
+  pathToUserSettings: string | FSJetpack | any;
+  userSettingsObject: ISettingsObject;
+  defaultSettings: ISettingsObject;
 
-  constructor(props: any) {
+  constructor(props: SettingProps) {
     super(props);
 
     this.pathToUserSettings = "";
-    this.userSettingsObject = {};
-    this.menuClassName = props.visibility ? "settings-menu active" : "settings-menu";
     this.settingItems = props.items;
 
+    this.defaultSettings = {
+      darkMode: true,
+    }
+
+    this.userSettingsObject = this.defaultSettings;
+
     this.state = {
-      default: 'default',
-    };
+      default: "default",
+    }
   }
 
   componentDidMount() {
     this.initIpc();
   }
 
-  async readFromSettings() {
-    const spath = this.pathToUserSettings;
-
-    if (spath.read('user-preferences.json', 'json') !== undefined) {
-      this.userSettingsObject = await spath.read('user-preferences.json', 'json');
-      this.applySettingsOnStartup();
-      console.log('user settings exists');
-    } else {
-      console.log('user-settings doesnt exist creating');
-      const defaultSettings = {
-        darkMode: true,
-      };
-
-      await spath.writeAsync("user-preferences.json", defaultSettings).then(() => {
-        this.userSettingsObject = spath.read('user-preferences.json', 'json');
-      });
-    }
-  }
-
-  // Send ping to main process and get app's userData path
   initIpc() {
-    ipcRenderer.on('response', (event, value) => {
+    ipcRenderer.on("response", (event, value) => {
       // console.log(`Renderer received ${value}.`);
       this.pathToUserSettings = jetpack.cwd(value);
       this.readFromSettings();
-    });
+    })
 
     ipcRenderer.send('get-settings-path', 'ping');
   }
 
+  async applySettingsOnStartup(): Promise<void> {
+    const settingsObject = this.pathToUserSettings.read("user-preferences.json", "json");
 
-  async applySettingsOnStartup() {
-    const settingsObject = this.userSettingsObject;
+    if (await settingsObject.darkMode === true) {
+      try {
+        document
+          .getElementsByTagName("HTML")[0]
+          .setAttribute("data-theme", "dark");
+      } catch (err) {
+        console.log('Cannot set data-theme: ' + err);
+      }
+    } else if (await settingsObject.darkMode === false) {
+      try {
+        document
+          .getElementsByTagName("HTML")[0]
+          .setAttribute("data-theme", "light");
+      } catch (err) {
+        console.log('Cannot set data-theme: ' + err);
+      }
 
-    if (await settingsObject.darkMode == true) {
-      document
-        .getElementsByTagName("HTML")[0]
-        .setAttribute("data-theme", "dark");
-    } else if (await settingsObject.darkMode == false) {
-      document
-        .getElementsByTagName("HTML")[0]
-        .setAttribute("data-theme", "light");
     } else {
       console.log('settings object in applySettings is undefined');
     }
   }
 
+  async readFromSettings(): Promise<void> {
+    const settingsPath = this.pathToUserSettings;
+    if (this.pathToUserSettings.read("user-preferences.json", "json") !== undefined) {
+      this.userSettingsObject = await settingsPath.readAsync("user-preferences.json", "json");
+      this.applySettingsOnStartup();
+      console.log('user settings exist');
+    } else {
+      console.log('user settings does not exist.. creating');
 
-  // Settings Functions -------------------------
+      try {
+        await settingsPath.writeAsync("user-preferences.json", this.defaultSettings);
+        this.userSettingsObject = settingsPath.read("user-preferences.json", "json");
+      } catch (err) {
+        console.log("Could not write to settings file: " + err);
+      }
+    }
+  }
+
+  // Settings Functions
   async toggleDarkMode() {
-    this.userSettingsObject = await this.pathToUserSettings.read('user-preferences.json', 'json');
-    const dM = this.userSettingsObject.darkMode;
+    try {
+      this.userSettingsObject = await this.pathToUserSettings.readAsync('user-preferences.json', 'json');
+    } catch (err) {
+      console.log(err);
+    }
+
+    let dM = this.userSettingsObject.darkMode;
 
     if (dM === true) {
       await this.pathToUserSettings.writeAsync('user-preferences.json', { darkMode: false });
@@ -93,13 +121,12 @@ class SettingsMenu extends React.Component<{}, SettingsMenuState> {
       await this.pathToUserSettings.writeAsync('user-preferences.json', { darkMode: true });
       document
         .getElementsByTagName("HTML")[0]
-        .setAttribute("data-theme", "dark");
+        .setAttribute("data-theme", "true");
     } else {
-      console.log('settings doesnt exist');
+      console.log('cannot toggle dark mode, settings object doesnt exist');
     }
   }
-  // end Settings Functions -------------------------
-
+  // end Settings Functions
 
   switchSettingFunctions(fn: string) {
     switch (fn) {
@@ -116,27 +143,30 @@ class SettingsMenu extends React.Component<{}, SettingsMenuState> {
 
 
   render() {
-    // item: any because unknown type
-    const mapSettingItems = settingItems.map((item: any) =>
-      <li className="settings-item" onClick={() => this.switchSettingFunctions(item.settingFunction)}>
+    // What is the type of item? ..
+    const mappedSettingItems = this.settingItems.map((item: any, index) =>
+      <li className="settings-menu-item" key={index} onClick={() => this.switchSettingFunctions(item.settingFunction)}>
         <a href="#" >{item.settingName}</a>
       </li>
     );
 
     return (
-      <div className={this.menuClassName}>
+      <div className="settings-menu">
         {/* Toggle button looks like small dot scaling in */}
-        <ul className="settings-list">{mapSettingItems}</ul>
+        <ul className="settings-list">{mappedSettingItems}</ul>
       </div>
     )
   }
 }
 
-export default function Settings() {
-  const [active, setActive] = useState<boolean>(false);
 
+export default function Settings(): JSX.Element {
   function toggleMenu(): void {
-    setActive(!active);
+    try {
+      document.querySelectorAll('.settings-menu')[0].classList.toggle('open');
+    } catch (err) {
+      console.log('cannot toggle menu: ' + err);
+    }
   }
 
   return (
@@ -144,9 +174,9 @@ export default function Settings() {
       {/* Button component with icon prop ? */}
       <button onClick={toggleMenu}>Press</button>
       <SettingsMenu
-        {...settingItems}
-        {...active}
+        items={settingItems}
       />
     </div>
   )
 }
+
