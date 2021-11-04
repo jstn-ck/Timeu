@@ -32,7 +32,7 @@ function Dashboard() {
   return (
     <div className="dashboard">
       <NetStatus />
-      <div className="dashboard__container">
+      <div className="container">
         Logged in as
         <div>Test</div>
         <div>{user?.email}</div>

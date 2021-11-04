@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import * as jetpack from 'fs-jetpack';
 import { ipcRenderer } from 'electron';
 import { FSJetpack } from "fs-jetpack/types";
+import Icon from "@/components/Icons/Icon";
+import { ICONS } from '@/constants';
 
 // interface ISettingsItems {
 //   settingName: string
@@ -171,8 +173,9 @@ export default function Settings(): JSX.Element {
 
   return (
     <div className="settings">
-      {/* Button component with icon prop ? */}
-      <button onClick={toggleMenu}>Press</button>
+      <button onClick={toggleMenu} className="button-icon">
+        <Icon size="10" icon={ICONS.FACEBOOK} />
+      </button>
       <SettingsMenu
         items={settingItems}
       />
