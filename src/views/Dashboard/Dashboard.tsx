@@ -3,7 +3,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useHistory } from "react-router";
 import "./dashboard.scss";
 import { auth, db } from "@/firebase/firebase";
-import { logout } from "@/views/Login/Login";
 import Settings from "@/components/Settings/Settings";
 import NetStatus from "@/components/Connectivity/Connectivity";
 
@@ -11,13 +10,19 @@ function Dashboard() {
   const [user, loading, error] = useAuthState(auth);
   const history = useHistory();
 
+  async function handleLogout() {
+    await auth.signOut();
+
+    history.replace("/");
+  };
+
   const fetchUserName = async () => {
     try {
       const query = await db
         .collection("users")
         .where("uid", "==", user?.uid)
         .get();
-      const data = await query.docs[0].data();
+      const data = query.docs[0].data();
     } catch (err) {
       console.error(err);
     }
@@ -36,7 +41,7 @@ function Dashboard() {
         Logged in as
         <div>Test</div>
         <div>{user?.email}</div>
-        <button className="dashboard__btn" onClick={logout}>
+        <button className="dashboard__btn" onClick={handleLogout}>
           Logout
         </button>
         <Settings />

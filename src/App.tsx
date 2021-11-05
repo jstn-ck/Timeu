@@ -10,7 +10,7 @@ import Reset from '@/views/Login/Reset';
 ReactDOM.render(
   <Router>
     <Switch>
-      <Route exact path="/" component={Dashboard} />
+      <Route exact path="/" component={Login} />
       <Route exact path="/dashboard" component={Dashboard} />
       <Route exact path="/register" component={Register} />
       <Route exact path="/reset" component={Reset} />

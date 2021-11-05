@@ -58,10 +58,6 @@ const sendPasswordResetEmail = async (email: string) => {
   }
 };
 
-const logout = () => {
-  auth.signOut();
-};
-
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -74,6 +70,7 @@ export default function Login() {
     }
     if (user) history.replace("/dashboard");
   }, [user, loading]);
+
   return (
     <div className="auth">
       <div className="container">
@@ -118,5 +115,4 @@ export {
   signInWithEmailAndPassword,
   registerWithEmailAndPassword,
   sendPasswordResetEmail,
-  logout,
 };

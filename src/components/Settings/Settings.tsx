@@ -123,7 +123,7 @@ class SettingsMenu extends React.Component<SettingProps, SettingState> {
       await this.pathToUserSettings.writeAsync('user-preferences.json', { darkMode: true });
       document
         .getElementsByTagName("HTML")[0]
-        .setAttribute("data-theme", "true");
+        .setAttribute("data-theme", "dark");
     } else {
       console.log('cannot toggle dark mode, settings object doesnt exist');
     }
@@ -148,7 +148,7 @@ class SettingsMenu extends React.Component<SettingProps, SettingState> {
     // What is the type of item? ..
     const mappedSettingItems = this.settingItems.map((item: any, index) =>
       <li className="settings-menu-item" key={index} onClick={() => this.switchSettingFunctions(item.settingFunction)}>
-        <a href="#" >{item.settingName}</a>
+        <span className="settings-menu-item-name">{item.settingName}</span>
       </li>
     );
 
@@ -174,7 +174,7 @@ export default function Settings(): JSX.Element {
   return (
     <div className="settings">
       <button onClick={toggleMenu} className="button-icon">
-        <Icon size="10" icon={ICONS.FACEBOOK} />
+        <Icon size="small" icon={ICONS.FACEBOOK} />
       </button>
       <SettingsMenu
         items={settingItems}

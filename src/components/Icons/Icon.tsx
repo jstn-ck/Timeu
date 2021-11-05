@@ -7,10 +7,33 @@ interface IProps {
 }
 
 const Icon = (props: IProps) => {
+  let size: string = '';
+
+  switch (props.size) {
+    case 'small': {
+      size = '15';
+      break;
+    }
+    case 'medium': {
+      size = '25';
+
+      break;
+    }
+    case 'large': {
+      size = '35';
+      break;
+    }
+
+    default: {
+      size = '15';
+      break;
+    }
+  }
+
   return (
     <svg
-      width={`${props.size}px`}
-      height={`${props.size}px`}
+      width={`${size}px`}
+      height={`${size}px`}
       viewBox="0 0 1024 1024"
     >
       <path
