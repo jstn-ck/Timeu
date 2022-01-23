@@ -4,7 +4,7 @@ import { useHistory } from "react-router";
 import "./dashboard.scss";
 import { auth, db } from "@/firebase/firebase";
 import Settings from "@/components/Settings/Settings";
-import NetStatus from "@/components/Connectivity/Connectivity";
+import Titlebar from "@/components/Titlebar/Titlebar";
 
 function Dashboard() {
   const [user, loading, error] = useAuthState(auth);
@@ -36,7 +36,7 @@ function Dashboard() {
 
   return (
     <div className="dashboard">
-      <NetStatus />
+      <Titlebar default="default"/>
       <div className="container">
         Logged in as
         <div>Test</div>

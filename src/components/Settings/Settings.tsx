@@ -1,6 +1,6 @@
 import './settings.scss';
 import { settingItems } from './settingItems';
-import React, { useState } from 'react';
+import React from 'react';
 import * as jetpack from 'fs-jetpack';
 import { ipcRenderer } from 'electron';
 import { FSJetpack } from "fs-jetpack/types";

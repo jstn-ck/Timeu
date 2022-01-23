@@ -1,5 +1,5 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
-const path = require('path');
+//const path = require('path');
 
 let win;
 
@@ -13,6 +13,7 @@ async function createWindow() {
     width: 800, height: 600,
     minHeight: 350,
     minWidth: 500,
+    titleBarStyle: 'hidden',
     webPreferences: {
       nodeIntegration: true,
       nodeIntegrationInWorker: true,

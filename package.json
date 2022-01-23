@@ -76,7 +76,6 @@
     "electron": "15.1.1",
     "fork-ts-checker-webpack-plugin": "^6.3.4",
     "node-loader": "^2.0.0",
-    "path": "^0.12.7",
     "sass": "^1.42.1",
     "sass-loader": "^12.1.0",
     "style-loader": "^3.0.0",

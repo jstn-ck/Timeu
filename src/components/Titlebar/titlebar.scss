@@ -1,0 +1,15 @@
+.titlebar {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+  min-height: 30px;
+  max-height: 30px;
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+  background-color: #343535;
+  box-shadow: 1px 1px 1px 1px #343535;
+}
