@@ -1,15 +1,17 @@
 .titlebar {
-  position: fixed;
+  position: sticky;
   display: flex;
   align-items: center;
   top: 0;
   left: 0;
   width: 100%;
+  margin-bottom: 15px;
   z-index: 999;
-  min-height: 30px;
-  max-height: 30px;
+  min-height: 47px;
+  max-height: 47px;
+  /* Creates draggable titlebar */
   -webkit-user-select: none;
   -webkit-app-region: drag;
-  background-color: #343535;
-  box-shadow: 1px 1px 1px 1px #343535;
+  background-color: var(--color-titlebar);
+  box-shadow: 1px 1px 1px 1px var(--color-titlebar);
 }

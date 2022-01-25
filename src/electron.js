@@ -14,6 +14,7 @@ async function createWindow() {
     minHeight: 350,
     minWidth: 500,
     titleBarStyle: 'hidden',
+    trafficLightPosition: {x: 18, y: 17},
     webPreferences: {
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
@@ -54,7 +55,7 @@ app.on('activate', () => {
 const userSettings = app.getPath('userData');
 
 ipcMain.on('get-settings-path', (event, key) => {
-  console.log(`Main process receved ${key}.`);
+  console.log(`Main process recieved ${key}.`);
   const value = userSettings;
   event.sender.send('response', value);
 });

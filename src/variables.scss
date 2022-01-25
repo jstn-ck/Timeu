@@ -3,11 +3,13 @@ html {
   --color-text: #fff;
   --color-background: #1E1E1E;
   --color-2: #212431; // 1E2022 ;
+  --color-titlebar: #343535;
 }
 
 html[data-theme="light"] {
   --color-text: #444545;
   --color-background: #FFFFFC;
   --color-2: #212431;
+  --color-titlebar: #e7e7e7;
 }
 

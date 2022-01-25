@@ -1,5 +1,44 @@
 .dashboard {
   position: relative;
-  display: block;
-  padding-top: 40px;
+  display: flex;
+  flex-shrink: 0;
+  height: 100%;
+  overflow: hidden;
+
+  /* Layout */
+  .side-pane {
+    position: relative;
+    top: 0;
+    height: 100vh;
+    background-color: #2B2E2E;
+    min-width: 135px;
+    max-width: 300px;
+    flex-basis: 200px;
+    overflow: scroll;
+    padding-top: 50px;
+
+    & * {
+      color: #fff;
+    }
+  }
+
+  #side-pane-resizer {
+    position: relative;
+    height: 100%;
+    z-index: 99;
+    cursor: col-resize;
+    flex-basis: 0;
+    border-left: 2px solid #2B2E2E;
+    border-right: 1px solid rgba(0, 0, 0, 0.4);
+    background: #333642;
+  }
+
+  .main-pane {
+    position: relative;
+    display: block;
+    flex-basis: 0;
+    flex-grow: 1;
+    min-width: 0;
+    overflow-y: scroll;
+  }
 }
