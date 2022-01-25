@@ -57,7 +57,7 @@ const sendPasswordResetEmail = async (email: string) => {
     console.error(err);
   }
 };
-
+// todo: Implement login loading screen at app start
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

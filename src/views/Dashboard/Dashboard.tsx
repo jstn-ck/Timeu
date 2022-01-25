@@ -11,8 +11,8 @@ function Dashboard() {
   const history = useHistory();
 
   useEffect(() => {
-    if (loading) return;
-    if (!user) return history.replace("/");
+    if (loading) {console.log('loading')};
+    if (!user) {console.log('waiting'), history.replace('/')};
     fetchUserName();
     handleSidebarResize();
   }, [user, loading]);
@@ -61,6 +61,8 @@ function Dashboard() {
         </div>
       </div>
       <div id="side-pane-resizer"></div>
+      <div className="card-list-pane"></div>
+      <div id="card-list-pane-resizer"></div>
       <div className="main-pane">
         <Titlebar default="default"/>
         <div className="container">

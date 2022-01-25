@@ -6,7 +6,7 @@
   overflow: hidden;
 
   /* Layout */
-  .side-pane {
+  .side-pane, .card-list-pane {
     position: relative;
     top: 0;
     height: 100vh;
@@ -22,7 +22,11 @@
     }
   }
 
-  #side-pane-resizer {
+  .card-list-pane {
+    background-color: #363838;
+  }
+
+  #side-pane-resizer, #card-list-pane-resizer {
     position: relative;
     height: 100%;
     z-index: 99;
