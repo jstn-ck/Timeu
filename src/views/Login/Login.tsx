@@ -57,11 +57,11 @@ const sendPasswordResetEmail = async (email: string) => {
     console.error(err);
   }
 };
-// todo: Implement login loading screen at app start
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, loading] = useAuthState(auth);
+  const [initializing, setInitializing] = useState(true);
   const history = useHistory();
 
   useEffect(() => {
@@ -70,6 +70,18 @@ export default function Login() {
     }
     if (user) history.replace("/dashboard");
   }, [user, loading]);
+
+  // Firebase connection loading screen
+  if (initializing) return (
+    <div className={'loading-dashboard'}>
+      <div className="loading-ring">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="auth">
