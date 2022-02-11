@@ -6,6 +6,9 @@ import { ipcRenderer } from 'electron';
 import { FSJetpack } from "fs-jetpack/types";
 import Icon from "@/components/Icons/Icon";
 import { ICONS } from '@/constants';
+import { useState } from 'react';
+import SettingsWindow from "@/components/Settings/SettingsWindow";
+
 
 // interface ISettingsItems {
 //   settingName: string
@@ -163,12 +166,24 @@ class SettingsMenu extends React.Component<SettingProps, SettingState> {
 
 
 export default function Settings(): JSX.Element {
-  function toggleMenu(): void {
+  const [settWin, openSettWin] = useState(false);
+
+  function toggleMenu() {
     try {
+      openSettWin(true);
       document.querySelectorAll('.settings-menu')[0].classList.toggle('open');
     } catch (err) {
-      console.log('cannot toggle menu: ' + err);
+      // Rename from console.log to .error für Doku
+      console.error(err);
     }
+  }
+
+  if(settWin) {
+    return (<SettingsWindow onClose={()=>{openSettWin(false)}}>
+      <SettingsMenu
+        items={settingItems}
+      />
+    </SettingsWindow>)
   }
 
   return (

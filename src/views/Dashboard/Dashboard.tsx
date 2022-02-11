@@ -23,6 +23,8 @@ function Dashboard() {
     const sidebar: Object | any = document.querySelectorAll('.side-pane')[0];
     const cardList: Object | any = document.querySelectorAll('.card-list-pane')[0];
     let mousX = 0;
+    const maxWidth = 300;
+    const minWidth = 135;
 
     sidebarResizer.addEventListener("mousedown", (e: any) => {
       e.preventDefault();
@@ -61,9 +63,6 @@ function Dashboard() {
         document.removeEventListener("mousemove", resizeCardList, false);
       }, false);
     });
-
-    const maxWidth = 300;
-    const minWidth = 135;
 
     function resizeSidebar(e: any): void {
       sidebar.style.flexBasis = e.x + "px";

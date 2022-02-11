@@ -27,7 +27,23 @@ async function createWindow() {
   win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   win.webContents.openDevTools();
 
-};
+  win.webContents.on('new-window',
+    (event, url, frameName, disposition, options, additionalFeatures) =>
+    {
+      if (frameName === 'Preferences ') {
+        event.preventDefault();
+        Object.assign(options, {
+          // This will prevent interactions with the mainWindow
+          parent: win,
+          title: frameName,
+          width: 400,
+          height: 250,
+          //`left` and `top` positions possible
+        });
+        event.newGuest = new BrowserWindow(options);
+      }
+    });
+}
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
