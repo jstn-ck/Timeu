@@ -66,22 +66,30 @@ export default function Login() {
 
   useEffect(() => {
     if (loading) {
+      console.log("test")
       return;
     }
-    if (user) history.replace("/dashboard");
+    if (user) {
+      history.replace("/dashboard")
+      setInitializing(false);
+    } else {
+      setInitializing(false);
+    };
   }, [user, loading]);
 
   // Firebase connection loading screen
-  if (initializing) return (
-    <div className={'loading-dashboard'}>
-      <div className="loading-ring">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
+  if (initializing) {
+    return (
+      <div className={'loading-dashboard'}>
+        <div className="loading-ring">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
       </div>
-    </div>
-  );
+    )
+  }
 
   return (
     <div className="auth">

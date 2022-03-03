@@ -1,8 +1,8 @@
-import React, {useEffect} from "react";
-import {useAuthState} from "react-firebase-hooks/auth";
-import {useHistory} from "react-router";
+import React, { useEffect } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useHistory } from "react-router";
 import "./dashboard.scss";
-import {auth, db} from "@/firebase/firebase";
+import { auth, db } from "@/firebase/firebase";
 import Settings from "@/components/Settings/Settings";
 import Titlebar from "@/components/Titlebar/Titlebar";
 
@@ -11,7 +11,10 @@ function Dashboard() {
   const history = useHistory();
 
   useEffect(() => {
-    if (loading) return;
+    if (loading) {
+      console.log("test")
+      return;
+    };
     if (!user) return history.replace('/');
     fetchUserName();
     handleSidebarResize();
@@ -30,7 +33,7 @@ function Dashboard() {
       e.preventDefault();
       mousX = e.x;
 
-      if(! ((parseInt(getComputedStyle(sidebar, '').flexBasis)) - mousX < 5)) {
+      if (!((parseInt(getComputedStyle(sidebar, '').flexBasis)) - mousX < 5)) {
         sidebar.style.flexBasis = mousX + "px";
       }
 
@@ -49,7 +52,7 @@ function Dashboard() {
       e.preventDefault();
       mousX = e.x;
 
-      if(! ((parseInt(getComputedStyle(cardList, '').flexBasis)) - mousX < 5)) {
+      if (!((parseInt(getComputedStyle(cardList, '').flexBasis)) - mousX < 5)) {
         cardList.style.flexBasis = mousX + "px";
       }
 
@@ -67,11 +70,11 @@ function Dashboard() {
     function resizeSidebar(e: any): void {
       sidebar.style.flexBasis = e.x + "px";
 
-      if((parseInt(getComputedStyle(sidebar, '').flexBasis) >= maxWidth)) {
+      if ((parseInt(getComputedStyle(sidebar, '').flexBasis) >= maxWidth)) {
         sidebar.style.flexBasis = maxWidth + "px";
       }
 
-      if((parseInt(getComputedStyle(sidebar, '').flexBasis) <= minWidth)) {
+      if ((parseInt(getComputedStyle(sidebar, '').flexBasis) <= minWidth)) {
         sidebar.style.flexBasis = minWidth + "px";
       }
     }
@@ -79,11 +82,11 @@ function Dashboard() {
     function resizeCardList(e: any): void {
       cardList.style.flexBasis = (e.x - cardList.offsetLeft) + "px";
 
-      if((parseInt(getComputedStyle(cardList, '').flexBasis) >= maxWidth)) {
+      if ((parseInt(getComputedStyle(cardList, '').flexBasis) >= maxWidth)) {
         cardList.style.flexBasis = maxWidth + "px";
       }
 
-      if((parseInt(getComputedStyle(cardList, '').flexBasis) <= minWidth)) {
+      if ((parseInt(getComputedStyle(cardList, '').flexBasis) <= minWidth)) {
         cardList.style.flexBasis = minWidth + "px";
       }
     }
@@ -123,7 +126,7 @@ function Dashboard() {
       </div>
       <div className="card-list-pane-resizer"></div>
       <div className="main-pane">
-        <Titlebar default="default"/>
+        <Titlebar default="default" />
         <div className="container">
           Logged in as
           <div>Test</div>
