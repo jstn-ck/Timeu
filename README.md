@@ -1,4 +1,4 @@
-# An Electron Timetracking app built with react and typescript.
+# An Electron Timetracking app built with React and Typescript.
 
 ## Author: Justin Kanwischer
 ### Status: WIP
