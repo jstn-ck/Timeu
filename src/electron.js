@@ -10,11 +10,11 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 
 async function createWindow() {
   win = new BrowserWindow({
-    width: 800, height: 600,
+    width: 1140, height: 650,
     minHeight: 350,
     minWidth: 500,
     titleBarStyle: 'hidden',
-    trafficLightPosition: {x: 18, y: 17},
+    trafficLightPosition: { x: 18, y: 17 },
     webPreferences: {
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
@@ -28,8 +28,7 @@ async function createWindow() {
   win.webContents.openDevTools();
 
   win.webContents.on('new-window',
-    (event, url, frameName, disposition, options, additionalFeatures) =>
-    {
+    (event, url, frameName, disposition, options, additionalFeatures) => {
       if (frameName === 'Preferences ') {
         event.preventDefault();
         Object.assign(options, {
