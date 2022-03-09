@@ -28,7 +28,7 @@
     min-width: 135px;
     max-width: 300px;
     flex-basis: 200px;
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
     padding-top: 50px;
 
@@ -79,6 +79,7 @@
     flex-basis: 0;
     flex-grow: 1;
     min-width: 0;
-    overflow-y: scroll;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 }

@@ -55,6 +55,7 @@ class SettingsMenu extends React.Component<SettingProps, SettingState> {
   }
 
   initIpc() {
+    // Rewrite because of possible memory leak
     ipcRenderer.on("response", (event, value) => {
       // console.log(`Renderer received ${value}.`);
       this.pathToUserSettings = jetpack.cwd(value);
@@ -179,11 +180,17 @@ export default function Settings(): JSX.Element {
   }
 
   if(settWin) {
-    return (<SettingsWindow onClose={()=>{openSettWin(false)}}>
-      <SettingsMenu
-        items={settingItems}
-      />
-    </SettingsWindow>)
+    return (
+      <div className="settings">
+        <button onClick={toggleMenu} className="button-icon">
+          <Icon size="small" icon={ICONS.FACEBOOK} />
+        </button>
+        <SettingsWindow onClose={() => { openSettWin(false); } }>
+        <SettingsMenu
+            items={settingItems} />
+        </SettingsWindow>
+      </div>
+    )
   }
 
   return (
