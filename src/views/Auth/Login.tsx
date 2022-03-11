@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import "./login.scss";
+import { LoadingScreen } from '@/components/LoadingScreen/LoadingScreen';
 
 // const googleProvider = new firebase.auth.GoogleAuthProvider();
 
@@ -58,18 +59,13 @@ export default function Login() {
   // Firebase connection loading screen
   if (initializing) {
     return (
-      <div className={'loading-dashboard'}>
-        <div className="loading-ring">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-      </div>
+      <LoadingScreen />
     )
   }
 
-  // TODO: Implement loading screen after click on login
+  // TODO: Implement loading screen after click on login and others
+  // check loading variable
+  // error for wrong email/pass
 
   return (
     <div className="auth">
@@ -99,10 +95,10 @@ export default function Login() {
           Login with Google
         </button> */}
 
-        <div>
+        <div className='forgot-password'>
           <Link to="/reset">Forgot Password</Link>
         </div>
-        <div>
+        <div className='register-container'>
           Don't have an account? <Link to="/register">Register</Link> now.
         </div>
       </div>

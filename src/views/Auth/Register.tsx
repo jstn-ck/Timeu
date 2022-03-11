@@ -59,7 +59,7 @@ function Register() {
         >
           Register with Google
         </button> */}
-        <div>
+        <div className='login-container'>
           Already have an account? <Link to="/">Login</Link>
         </div>
       </div>

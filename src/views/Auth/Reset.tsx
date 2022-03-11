@@ -40,7 +40,10 @@ export default function Reset() {
         >
           Send password reset email
         </button>
-        <div>
+        <div className='login-container'>
+          Already have an account? <Link to="/">Login</Link>
+        </div>
+        <div className="register-container">
           Don't have an account? <Link to="/register">Register</Link> now.
         </div>
       </div>
