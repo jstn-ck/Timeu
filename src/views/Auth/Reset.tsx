@@ -2,18 +2,28 @@ import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
-import { sendPasswordResetEmail } from "./Login";
 import { auth } from "@/firebase/firebase";
 import "./login.scss";
 
-function Reset() {
+const sendPasswordResetEmail = async (email: string) => {
+  try {
+    await auth.sendPasswordResetEmail(email);
+    alert("Password reset link sent!");
+  } catch (err: any) {
+    console.error(err);
+  }
+};
+
+export default function Reset() {
   const [email, setEmail] = useState("");
   const [user, loading] = useAuthState(auth);
   const history = useHistory();
+
   useEffect(() => {
     if (loading) return;
     if (user) history.replace("/dashboard");
   }, [user, loading]);
+
   return (
     <div className="auth">
       <div className="container">
@@ -37,5 +47,3 @@ function Reset() {
     </div>
   );
 }
-
-export default Reset;

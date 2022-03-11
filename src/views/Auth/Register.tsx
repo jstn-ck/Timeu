@@ -1,10 +1,23 @@
-import { auth } from '@/firebase/firebase';
+import { auth, db } from '@/firebase/firebase';
 import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { registerWithEmailAndPassword } from './Login';
-import { signInWithGoogle } from './Login';
+// import { signInWithGoogle } from './Login';
 import "./login.scss";
+
+const registerWithEmailAndPassword = async (email: string, password: string) => {
+  try {
+    const res = await auth.createUserWithEmailAndPassword(email, password);
+    const user = res.user;
+    await db.collection("users").add({
+      uid: user!.uid,
+      authProvider: "local",
+      email,
+    });
+  } catch (err: any) {
+    console.error(err);
+  }
+};
 
 function Register() {
   const [email, setEmail] = useState("");
@@ -14,10 +27,12 @@ function Register() {
   const register = () => {
     registerWithEmailAndPassword(email, password);
   };
+
   useEffect(() => {
     if (loading) return;
     if (user) history.replace("/dashboard");
   }, [user, loading]);
+
   return (
     <div className="auth">
       <div className="container">
@@ -38,12 +53,12 @@ function Register() {
         <button className="btn register" onClick={register}>
           Register
         </button>
-        <button
+        {/* <button
           className="btn login google"
           onClick={signInWithGoogle}
         >
           Register with Google
-        </button>
+        </button> */}
         <div>
           Already have an account? <Link to="/">Login</Link>
         </div>

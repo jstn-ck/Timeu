@@ -5,27 +5,27 @@ import { Link, useHistory } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import "./login.scss";
 
-const googleProvider = new firebase.auth.GoogleAuthProvider();
+// const googleProvider = new firebase.auth.GoogleAuthProvider();
 
-const signInWithGoogle = async () => {
-  try {
-    const res = await auth.signInWithPopup(googleProvider);
-    const user = res.user;
-    const query = await db
-      .collection("users")
-      .where("uid", "==", user!.uid)
-      .get();
-    if (query.docs.length === 0) {
-      await db.collection("users").add({
-        uid: user!.uid,
-        authProvider: "google",
-        email: user!.email,
-      });
-    }
-  } catch (err: any) {
-    console.error(err);
-  }
-};
+// const signInWithGoogle = async () => {
+//   try {
+//     const res = await auth.signInWithPopup(googleProvider);
+//     const user = res.user;
+//     const query = await db
+//       .collection("users")
+//       .where("uid", "==", user!.uid)
+//       .get();
+//     if (query.docs.length === 0) {
+//       await db.collection("users").add({
+//         uid: user!.uid,
+//         authProvider: "google",
+//         email: user!.email,
+//       });
+//     }
+//   } catch (err: any) {
+//     console.error(err);
+//   }
+// };
 
 const signInWithEmailAndPassword = async (email: string, password: string) => {
   try {
@@ -35,28 +35,6 @@ const signInWithEmailAndPassword = async (email: string, password: string) => {
   }
 };
 
-const registerWithEmailAndPassword = async (email: string, password: string) => {
-  try {
-    const res = await auth.createUserWithEmailAndPassword(email, password);
-    const user = res.user;
-    await db.collection("users").add({
-      uid: user!.uid,
-      authProvider: "local",
-      email,
-    });
-  } catch (err: any) {
-    console.error(err);
-  }
-};
-
-const sendPasswordResetEmail = async (email: string) => {
-  try {
-    await auth.sendPasswordResetEmail(email);
-    alert("Password reset link sent!");
-  } catch (err: any) {
-    console.error(err);
-  }
-};
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -91,6 +69,8 @@ export default function Login() {
     )
   }
 
+  // TODO: Implement loading screen after click on login
+
   return (
     <div className="auth">
       <div className="container">
@@ -114,9 +94,11 @@ export default function Login() {
         >
           Login
         </button>
-        <button className="btn login google" onClick={signInWithGoogle}>
+
+        {/* <button className="btn login google" onClick={signInWithGoogle}>
           Login with Google
-        </button>
+        </button> */}
+
         <div>
           <Link to="/reset">Forgot Password</Link>
         </div>
@@ -131,8 +113,6 @@ export default function Login() {
 export {
   auth,
   db,
-  signInWithGoogle,
+  //signInWithGoogle,
   signInWithEmailAndPassword,
-  registerWithEmailAndPassword,
-  sendPasswordResetEmail,
 };

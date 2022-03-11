@@ -25,6 +25,7 @@ function Dashboard() {
     const cardListResizer: Object | any = document.querySelectorAll('.card-list-pane-resizer')[0];
     const sidebar: Object | any = document.querySelectorAll('.side-pane')[0];
     const cardList: Object | any = document.querySelectorAll('.card-list-pane')[0];
+    
     let mousX = 0;
     const maxWidth = 300;
     const minWidth = 135;
@@ -95,6 +96,7 @@ function Dashboard() {
   async function handleLogout() {
     await auth.signOut();
 
+    // Await with loading screen ?
     history.replace("/");
   };
 
@@ -105,6 +107,7 @@ function Dashboard() {
         .where("uid", "==", user?.uid)
         .get();
       const data = query.docs[0].data();
+      console.log(data);
     } catch (err) {
       console.error(err);
     }

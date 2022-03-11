@@ -2,10 +2,10 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import './main.scss';
-import Login from '@/views/Login/Login';
+import Login from '@/views/Auth/Login';
 import Dashboard from '@/views/Dashboard/Dashboard';
-import Register from '@/views/Login/Register';
-import Reset from '@/views/Login/Reset';
+import Register from '@/views/Auth/Register';
+import Reset from '@/views/Auth/Reset';
 
 ReactDOM.render(
   <Router>
