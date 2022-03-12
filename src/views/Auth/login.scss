@@ -28,17 +28,26 @@
     width: 400px;
     height: 250px;
     border-radius: 5px;
-    box-shadow: 3px 1px 28px -5px #000000;
-    background-color: #303030;
     margin: 0 15px;
     padding-top: 15px;
   }
 
   button {
     align-self: end;
-    max-width: 50px;
     pointer-events: all;
     z-index: 2;
+  }
+
+  .btn {
+    padding: 8px 20px;
+    background-color: #d8d8d8;
+    cursor: pointer;
+    transition: 0.2s ease;
+
+    &:hover {
+      transform: scale(.95);
+      background-color: darken(#d8d8d8, 10);
+    }
   }
 
   button, input, textarea, a {
@@ -65,7 +74,8 @@
   }
 
   .forgot-password {
-      margin-top: -15px;
+      margin-top: -35px;
+      padding-left: .8em;
 
     a {
       font-size: 12px;
@@ -77,9 +87,9 @@
   input {
     padding: .8em;
     margin: .6em 0;
-    background-color: var(--color-background);
+    background-color: #333333;
     color: #CACACA;
-    box-shadow: 3px 3px 11px -6px #000000;
+    box-shadow: inset 3px 3px 11px -6px #000000;
     border: 2px solid var(--color-background);
     transition: 0.2s ease;
 

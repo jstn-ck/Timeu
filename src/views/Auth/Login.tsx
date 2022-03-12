@@ -5,6 +5,7 @@ import { Link, useHistory } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import "./login.scss";
 import { LoadingScreen } from '@/components/LoadingScreen/LoadingScreen';
+import { ErrorMessage } from '@/components/ErrorMessage/ErrorMessage';
 
 // const googleProvider = new firebase.auth.GoogleAuthProvider();
 
@@ -32,7 +33,9 @@ const signInWithEmailAndPassword = async (email: string, password: string) => {
   try {
     await auth.signInWithEmailAndPassword(email, password);
   } catch (err: any) {
-    console.error(err);
+    if(err) {
+      ErrorMessage('Invalid email or password'); 
+    }
   }
 };
 
@@ -43,15 +46,15 @@ export default function Login() {
   const [initializing, setInitializing] = useState(true);
   const history = useHistory();
 
-  useEffect(() => {
+  useEffect((): any => {
     if (loading) {
-      console.log("test")
-      return;
+      return <LoadingScreen />
     }
+
     if (user) {
       history.replace("/dashboard")
       setInitializing(false);
-    } else {
+    } else if(!loading){
       setInitializing(false);
     };
   }, [user, loading]);
@@ -63,9 +66,8 @@ export default function Login() {
     )
   }
 
-  // TODO: Implement loading screen after click on login and others
-  // check loading variable
-  // error for wrong email/pass
+  // Implement loading screen after click on login and others ?
+  // error handling
 
   return (
     <div className="auth">

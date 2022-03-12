@@ -5,17 +5,19 @@ import "./dashboard.scss";
 import { auth, db } from "@/firebase/firebase";
 import Settings from "@/components/Settings/Settings";
 import Titlebar from "@/components/Titlebar/Titlebar";
+import { LoadingScreen } from "@/components/LoadingScreen/LoadingScreen";
 
 function Dashboard() {
-  const [user, loading, error] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
   const history = useHistory();
 
-  useEffect(() => {
+  useEffect((): any => {
     if (loading) {
-      console.log("test")
-      return;
+      return <LoadingScreen />
     };
+
     if (!user) return history.replace('/');
+
     fetchUserName();
     handleSidebarResize();
   }, [user, loading]);
