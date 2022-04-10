@@ -3,9 +3,18 @@ html {
   --color-text: #fff;
   --color-background: #1E1E1E;
   --color-2: #212431; // 1E2022 ;
+  --color-pane-sidebar: #2B2E2E;
+  --color-pane-cardlist: #363838;
   --color-titlebar: #343535;
-  --grey: #8B8C8F;
   --text-white: #B8B8BA;
+  --input-bg: #333333;
+  
+  --grey: #8B8C8F;
+  --grey-2: #CACACA;
+  --white: #fff;
+  --green: #5c8178;
+  --red: rgb(160, 65, 65);
+  --black: #000;
 }
 
 html[data-theme="light"] {

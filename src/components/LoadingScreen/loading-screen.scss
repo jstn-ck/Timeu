@@ -5,7 +5,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #313333;
+    background-color: var(--color-background);
     z-index: 9;
   
     .loading-ring {
@@ -21,10 +21,10 @@
       width: 64px;
       height: 64px;
       margin: 8px;
-      border: 3px solid #CACACA;
+      border: 3px solid var(--grey-2);
       border-radius: 50%;
       animation: loading-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-      border-color: #CACACA transparent transparent transparent;
+      border-color: var(--grey-2) transparent transparent transparent;
     }
     .loading-ring div:nth-child(1) {
       animation-delay: -0.45s;

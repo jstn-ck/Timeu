@@ -28,6 +28,19 @@ body {
   transition: background 0.3s ease, color 0.3s ease;
 }
 
+button {
+  display: block;
+  outline: 0;
+  border: 0;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+ul {
+  text-decoration: none;
+  list-style: none;
+}
+
 .container {
   position: relative;
   display: block;

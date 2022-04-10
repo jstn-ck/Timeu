@@ -4,10 +4,9 @@
   right: 10px;
   font-size: .7rem;
   padding-left: 10px;
-  display: none;
 
   &.offline {
-    color: #949494;
+    color: var(--grey);
     display: inline-block;
   }
 }

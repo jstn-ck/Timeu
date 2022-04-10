@@ -64,7 +64,7 @@
 
   a {
     justify-self: end;
-    color: #CACACA;
+    color: var(--grey-2);
     transition: 0.2s ease;
     text-decoration: underline;
 
@@ -87,9 +87,9 @@
   input {
     padding: .8em;
     margin: .6em 0;
-    background-color: #333333;
-    color: #CACACA;
-    box-shadow: inset 3px 3px 11px -6px #000000;
+    background-color: var(--input-bg);
+    color: var(--grey-2);
+    box-shadow: inset 3px 3px 11px -6px var(--black);
     border: 2px solid var(--color-background);
     transition: 0.2s ease;
 

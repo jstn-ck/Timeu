@@ -4,11 +4,10 @@ import React from 'react';
 import * as jetpack from 'fs-jetpack';
 import { ipcRenderer } from 'electron';
 import { FSJetpack } from "fs-jetpack/types";
-import Icon from "@/components/Icons/Icon";
-import { ICONS } from '@/constants';
 import { useState } from 'react';
 import SettingsWindow from "@/components/Settings/SettingsWindow";
-
+import SIcon from '@/components/Icons/SettingsIcon';
+import Connectivity from '@/components/Connectivity/Connectivity';
 
 // interface ISettingsItems {
 //   settingName: string
@@ -168,13 +167,17 @@ class SettingsMenu extends React.Component<SettingProps, SettingState> {
 
 export default function Settings(): JSX.Element {
   const [settWin, openSettWin] = useState(false);
+  const menu = document.querySelectorAll('.settings-menu')[0];
 
   function toggleMenu() {
     try {
       openSettWin(true);
-      document.querySelectorAll('.settings-menu')[0].classList.toggle('open');
+      if(menu) {
+        // Casual checks if element even exists (good practice to not get undefined errors)
+        document.querySelectorAll('.settings-menu')[0].classList.toggle('open');
+      }
     } catch (err) {
-      // Rename from console.log to .error für Doku
+      // Rename from console.log to .error für Doku (error handling)
       console.error(err);
     }
   }
@@ -183,11 +186,12 @@ export default function Settings(): JSX.Element {
     return (
       <div className="settings">
         <button onClick={toggleMenu} className="button-icon">
-          <Icon size="small" icon={ICONS.FACEBOOK} />
+          <SIcon />
         </button>
         <SettingsWindow onClose={() => { openSettWin(false); } }>
         <SettingsMenu
             items={settingItems} />
+        <Connectivity />
         </SettingsWindow>
       </div>
     )
@@ -196,11 +200,8 @@ export default function Settings(): JSX.Element {
   return (
     <div className="settings">
       <button onClick={toggleMenu} className="button-icon">
-        <Icon size="small" icon={ICONS.FACEBOOK} />
+        <SIcon />
       </button>
-      <SettingsMenu
-        items={settingItems}
-      />
     </div>
   )
 }

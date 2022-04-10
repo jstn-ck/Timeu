@@ -8,7 +8,6 @@
   .app-control, .card-list-control {
     min-height: 47px;
     width: 100%;
-    opacity: 0;
     -webkit-user-select: none;
     -webkit-app-region: drag;
     margin-top: -50px;
@@ -24,13 +23,17 @@
     top: 0;
     left: 0;
     height: 100vh;
-    background-color: #2B2E2E;
+    background-color: var(--color-panes);
     min-width: 135px;
     max-width: 300px;
     flex-basis: 200px;
     overflow-y: auto;
     overflow-x: hidden;
     padding-top: 50px;
+    transition: opacity 0.2s ease;
+    opacity: 1;
+    visibility: visible;
+    max-width: 100%;
 
     .resize-overlay {
       position: fixed;
@@ -44,12 +47,12 @@
     }
 
     & * {
-      color: #fff;
+      color: var(--white);
     }
   }
 
   .card-list-pane {
-    background-color: #363838;
+    background-color: var(--color-pane-cardlist);
   }
 
   .side-pane-resizer, .card-list-pane-resizer {
@@ -59,18 +62,18 @@
     z-index: 99;
     cursor: col-resize;
     flex-basis: 0;
-    border-left: 2px solid #2B2E2E;
-    border-right: 2px solid #2B2E2E;
-    box-shadow: -3px 0px 0px 3px #2B2E2E;
+    border-left: 2px solid var(--color-pane-sidebar);
+    border-right: 2px solid var(--color-pane-sidebar);
+    box-shadow: -3px 0px 0px 3px var(--color-pane-sidebar);
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
   }
 
   .card-list-pane-resizer {
-    border-left: 2px solid #363838;
-    border-right: 2px solid #363838;
-    box-shadow: -3px 0px 0px 3px #363838;
+    border-left: 2px solid var(--color-pane-cardlist);
+    border-right: 2px solid var(--color-pane-cardlist);
+    box-shadow: -3px 0px 0px 3px var(--color-pane-cardlist);
   }
 
   .main-pane {

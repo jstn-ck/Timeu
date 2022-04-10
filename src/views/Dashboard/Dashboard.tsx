@@ -7,6 +7,13 @@ import Settings from "@/components/Settings/Settings";
 import Titlebar from "@/components/Titlebar/Titlebar";
 import { LoadingScreen } from "@/components/LoadingScreen/LoadingScreen";
 
+// How does this work ?
+// declare global {
+//   interface Window {
+//     width: any;
+//   }
+// }
+
 function Dashboard() {
   const [user, loading] = useAuthState(auth);
   const history = useHistory();
@@ -95,12 +102,6 @@ function Dashboard() {
     }
   }
 
-  async function handleLogout() {
-    await auth.signOut();
-
-    // Await with loading screen ?
-    history.replace("/");
-  };
 
   const fetchUserName = async () => {
     try {
@@ -136,10 +137,6 @@ function Dashboard() {
           Logged in as
           <div>Test</div>
           <div>{user?.email}</div>
-          <button className="dashboard__btn" onClick={handleLogout}>
-            Logout
-          </button>
-          <Settings />
         </div>
       </div>
     </div>

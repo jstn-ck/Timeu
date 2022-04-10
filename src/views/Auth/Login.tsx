@@ -46,6 +46,9 @@ export default function Login() {
   const [initializing, setInitializing] = useState(true);
   const history = useHistory();
 
+  // Todo: Login with enter
+  // Implement loading screen after click on login and others ?
+
   useEffect((): any => {
     if (loading) {
       return <LoadingScreen />
@@ -65,9 +68,6 @@ export default function Login() {
       <LoadingScreen />
     )
   }
-
-  // Implement loading screen after click on login and others ?
-  // error handling
 
   return (
     <div className="auth">

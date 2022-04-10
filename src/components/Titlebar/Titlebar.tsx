@@ -1,6 +1,6 @@
 import './titlebar.scss';
 import React from 'react';
-import Connectivity from '@/components/Connectivity/Connectivity';
+import Settings from '@/components/Settings/Settings';
 
 type TitlebarProps = {
   default: string,
@@ -18,9 +18,7 @@ export default class Titlebar extends React.Component<TitlebarProps, TitlebarSta
   render() {
     return (
       <div className="titlebar">
-        <div className="tb-connectivity">
-          <Connectivity />
-        </div>
+          <Settings />
       </div>
     )
   }
