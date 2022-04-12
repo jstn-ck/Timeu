@@ -30,21 +30,21 @@ function Dashboard() {
   }, [user, loading]);
 
   async function handleSidebarResize(): Promise<void> {
-    const sidebarResizer: Object | any = document.querySelectorAll('.side-pane-resizer')[0];
+    const sidebarResizer: Object | any = document.querySelectorAll('.project-list-pane-resizer')[0];
     const cardListResizer: Object | any = document.querySelectorAll('.card-list-pane-resizer')[0];
-    const sidebar: Object | any = document.querySelectorAll('.side-pane')[0];
+    const sidebar: Object | any = document.querySelectorAll('.project-list-pane')[0];
     const cardList: Object | any = document.querySelectorAll('.card-list-pane')[0];
     
-    let mousX = 0;
+    let mouseX = 0;
     const maxWidth = 300;
     const minWidth = 135;
 
     sidebarResizer.addEventListener("mousedown", (e: any) => {
       e.preventDefault();
-      mousX = e.x;
+      mouseX = e.x;
 
-      if (!((parseInt(getComputedStyle(sidebar, '').flexBasis)) - mousX < 5)) {
-        sidebar.style.flexBasis = mousX + "px";
+      if (!((parseInt(getComputedStyle(sidebar, '').flexBasis)) - mouseX < 5)) {
+        sidebar.style.flexBasis = mouseX + "px";
       }
 
       let resizeOverlay = document.createElement('div');
@@ -60,10 +60,10 @@ function Dashboard() {
 
     cardListResizer.addEventListener("mousedown", (e: any) => {
       e.preventDefault();
-      mousX = e.x;
+      mouseX = e.x;
 
-      if (!((parseInt(getComputedStyle(cardList, '').flexBasis)) - mousX < 5)) {
-        cardList.style.flexBasis = mousX + "px";
+      if (!((parseInt(getComputedStyle(cardList, '').flexBasis)) - mouseX < 5)) {
+        cardList.style.flexBasis = mouseX + "px";
       }
 
       let resizeOverlay = document.createElement('div');
@@ -118,13 +118,13 @@ function Dashboard() {
 
   return (
     <div className="dashboard">
-      <div className="side-pane">
+      <div className="project-list-pane">
         <div className="app-control"></div>
         <div className="container">
           <h1>Test</h1>
         </div>
       </div>
-      <div className="side-pane-resizer"></div>
+      <div className="project-list-pane-resizer"></div>
       <div className="card-list-pane">
         <div className="card-list-control">
           <h1>test</h1>

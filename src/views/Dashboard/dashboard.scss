@@ -18,12 +18,12 @@
   }
 
   /* Layout */
-  .side-pane, .card-list-pane {
+  .project-list-pane, .card-list-pane {
     position: relative;
     top: 0;
     left: 0;
     height: 100vh;
-    background-color: var(--color-panes);
+    background-color: var(--color-pane-sidebar);
     min-width: 135px;
     max-width: 300px;
     flex-basis: 200px;
@@ -55,7 +55,7 @@
     background-color: var(--color-pane-cardlist);
   }
 
-  .side-pane-resizer, .card-list-pane-resizer {
+  .project-list-pane-resizer, .card-list-pane-resizer {
     position: relative;
     height: 100%;
     right: -2px;
