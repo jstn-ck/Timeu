@@ -5,7 +5,7 @@
   height: 100%;
   overflow: hidden;
 
-  .app-control, .card-list-control {
+  .app-control {
     min-height: 47px;
     width: 100%;
     -webkit-user-select: none;
@@ -13,23 +13,20 @@
     margin-top: -50px;
   }
 
-  .card-list-control {
-    opacity: 1;
-  }
 
   /* Layout */
-  .project-list-pane, .card-list-pane {
+  .project-list-pane {
     position: relative;
     top: 0;
     left: 0;
     height: 100vh;
     background-color: var(--color-pane-sidebar);
     min-width: 135px;
-    max-width: 300px;
+    max-width: 400px;
     flex-basis: 200px;
     overflow-y: auto;
     overflow-x: hidden;
-    padding-top: 50px;
+    padding-top: 70px;
     transition: opacity 0.2s ease;
     opacity: 1;
     visibility: visible;
@@ -51,11 +48,7 @@
     }
   }
 
-  .card-list-pane {
-    background-color: var(--color-pane-cardlist);
-  }
-
-  .project-list-pane-resizer, .card-list-pane-resizer {
+  .project-list-pane-resizer{
     position: relative;
     height: 100%;
     right: -2px;
@@ -70,12 +63,6 @@
     user-select: none;
   }
 
-  .card-list-pane-resizer {
-    border-left: 2px solid var(--color-pane-cardlist);
-    border-right: 2px solid var(--color-pane-cardlist);
-    box-shadow: -3px 0px 0px 3px var(--color-pane-cardlist);
-  }
-
   .main-pane {
     position: relative;
     display: block;
@@ -86,3 +73,5 @@
     overflow-x: hidden;
   }
 }
+
+

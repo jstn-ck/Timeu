@@ -1,0 +1,94 @@
+.project-title-container {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .list-title {
+        position: relative;
+        display: inline-block;
+        font-size: 13px;
+        color: var(--grey);
+    }
+
+    .add-project {
+        position: relative;
+        display: inline-block;
+        border-radius: 50%;
+        top: -1px;
+        width: 18px;
+        height: 18px;
+        margin-left: auto;
+        border: 1px solid var(--grey);
+        cursor: pointer;
+
+        &:hover {
+           border: 1px solid var(--white); 
+
+           &::before, &::after {
+               background-color: var(--white);
+           }
+        }
+
+        &::before,&::after {
+            content: "";
+            position: absolute;
+            width: 8px;
+            height: 2px;
+            background-color: var(--grey);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        &::after {
+            transform: translate(-50%, -50%) rotate(90deg);
+        }
+    }
+}
+
+
+.projects {
+    padding-top: 15px;
+
+    li {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        font-size: 14px;
+        padding: 7px 0;
+        padding-right: 45px;
+        cursor: pointer;
+        width: 100%;
+        border-radius: 5px;
+
+        &.project-selected {
+            &::before {
+                content: "";
+                background-color: var(--grey-3);
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        .project-time {
+            display: inline-block;
+            text-overflow: unset;
+            padding: 2px 4px;
+            position: absolute;
+            right: 1px;
+            margin-bottom: 1px;
+            z-index: 99999;
+            background-color: var(--grey-3);
+            border-radius: 10px;
+            color: var(--grey-3);
+            text-align: center;
+            font-size: 12px;
+            line-height: 1;
+
+            .project-current {
+                color: var(--grey-2);
+            }
+        }
+    }
+}

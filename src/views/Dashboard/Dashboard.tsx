@@ -6,6 +6,7 @@ import { auth, db } from "@/firebase/firebase";
 import Settings from "@/components/Settings/Settings";
 import Titlebar from "@/components/Titlebar/Titlebar";
 import { LoadingScreen } from "@/components/LoadingScreen/LoadingScreen";
+import Projects from "@/components/Projects/Projects";
 
 // How does this work ?
 // declare global {
@@ -31,12 +32,10 @@ function Dashboard() {
 
   async function handleSidebarResize(): Promise<void> {
     const sidebarResizer: Object | any = document.querySelectorAll('.project-list-pane-resizer')[0];
-    const cardListResizer: Object | any = document.querySelectorAll('.card-list-pane-resizer')[0];
     const sidebar: Object | any = document.querySelectorAll('.project-list-pane')[0];
-    const cardList: Object | any = document.querySelectorAll('.card-list-pane')[0];
     
     let mouseX = 0;
-    const maxWidth = 300;
+    const maxWidth = 400;
     const minWidth = 135;
 
     sidebarResizer.addEventListener("mousedown", (e: any) => {
@@ -58,25 +57,6 @@ function Dashboard() {
       }, false);
     });
 
-    cardListResizer.addEventListener("mousedown", (e: any) => {
-      e.preventDefault();
-      mouseX = e.x;
-
-      if (!((parseInt(getComputedStyle(cardList, '').flexBasis)) - mouseX < 5)) {
-        cardList.style.flexBasis = mouseX + "px";
-      }
-
-      let resizeOverlay = document.createElement('div');
-      resizeOverlay.classList.add('resize-overlay');
-      cardList.appendChild(resizeOverlay);
-
-      document.addEventListener("mousemove", resizeCardList, false);
-      document.addEventListener("mouseup", () => {
-        resizeOverlay.remove();
-        document.removeEventListener("mousemove", resizeCardList, false);
-      }, false);
-    });
-
     function resizeSidebar(e: any): void {
       sidebar.style.flexBasis = e.x + "px";
 
@@ -88,20 +68,7 @@ function Dashboard() {
         sidebar.style.flexBasis = minWidth + "px";
       }
     }
-
-    function resizeCardList(e: any): void {
-      cardList.style.flexBasis = (e.x - cardList.offsetLeft) + "px";
-
-      if ((parseInt(getComputedStyle(cardList, '').flexBasis) >= maxWidth)) {
-        cardList.style.flexBasis = maxWidth + "px";
-      }
-
-      if ((parseInt(getComputedStyle(cardList, '').flexBasis) <= minWidth)) {
-        cardList.style.flexBasis = minWidth + "px";
-      }
-    }
   }
-
 
   const fetchUserName = async () => {
     try {
@@ -121,16 +88,10 @@ function Dashboard() {
       <div className="project-list-pane">
         <div className="app-control"></div>
         <div className="container">
-          <h1>Test</h1>
+          <Projects />
         </div>
       </div>
       <div className="project-list-pane-resizer"></div>
-      <div className="card-list-pane">
-        <div className="card-list-control">
-          <h1>test</h1>
-        </div>
-      </div>
-      <div className="card-list-pane-resizer"></div>
       <div className="main-pane">
         <Titlebar default="default" />
         <div className="container">
