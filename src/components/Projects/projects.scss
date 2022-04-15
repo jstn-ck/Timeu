@@ -1,8 +1,22 @@
 .project-title-container {
-    position: relative;
+    position: -webkit-sticky;
+    position: sticky;
+    top: -8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 1px 1px 1px 1px var(--color-pane-sidebar);
+    z-index: 999;
+
+    &::before {
+        content: '';
+        position: absolute; 
+        width: 150%;
+        height: 181%;
+        left: -30px;
+        top: -10px; 
+        background-color: var(--color-pane-sidebar);
+    }
 
     .list-title {
         position: relative;
@@ -47,6 +61,32 @@
     }
 }
 
+.project-container {
+    position: relative;
+    cursor: pointer;
+    z-index: 1;
+
+    &::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: var(--grey-3);
+        top: 0;
+        left: -8px;
+        transition: 0.2s ease;
+        opacity: 0;
+        z-index: -1;
+        border-radius: 5px;
+        padding-right: 18px;
+    }
+
+    &.selected {
+        &::before {
+            opacity: 1;
+        }
+    }
+}
 
 .projects {
     padding-top: 15px;
@@ -56,29 +96,20 @@
         white-space: nowrap;
         overflow: hidden;
         font-size: 14px;
-        padding: 7px 0;
+        padding: 10px 0;
         padding-right: 45px;
         cursor: pointer;
         width: 100%;
         border-radius: 5px;
-
-        &.project-selected {
-            &::before {
-                content: "";
-                background-color: var(--grey-3);
-                width: 100%;
-                height: 100%;
-            }
-        }
 
         .project-time {
             display: inline-block;
             text-overflow: unset;
             padding: 2px 4px;
             position: absolute;
-            right: 1px;
+            right: -6px;
             margin-bottom: 1px;
-            z-index: 99999;
+            z-index: 100;
             background-color: var(--grey-3);
             border-radius: 10px;
             color: var(--grey-3);

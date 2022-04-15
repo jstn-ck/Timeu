@@ -7,6 +7,7 @@ import Settings from "@/components/Settings/Settings";
 import Titlebar from "@/components/Titlebar/Titlebar";
 import { LoadingScreen } from "@/components/LoadingScreen/LoadingScreen";
 import Projects from "@/components/Projects/Projects";
+import { Card } from "@/components/Card/Card";
 
 // How does this work ?
 // declare global {
@@ -95,6 +96,11 @@ function Dashboard() {
       <div className="main-pane">
         <Titlebar default="default" />
         <div className="container">
+          <Projects>
+            <Card />
+          </Projects>
+
+
           Logged in as
           <div>Test</div>
           <div>{user?.email}</div>
