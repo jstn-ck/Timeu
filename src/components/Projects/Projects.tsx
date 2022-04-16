@@ -2,33 +2,54 @@ import './projects.scss';
 import React, { EffectCallback, useEffect, useState } from 'react';
 //nano id to easily generate random unique ids for projects/cards..
 import { nanoid } from 'nanoid'
-import { iteratorSymbol } from 'immer/dist/internal';
 // model.id = nanoid() //=> "V1StGXR8_Z5jdHi6B-myT"
 
 export default function Projects(props: any) {
     const [addedProject, addProject]: any = useState([]);
-    let projects: any = []; 
+    const [modal, openModal] = useState(false);
+    const [projectName, setProjectName] = useState("");
+    const [projectLimit, setProjectLimit] = useState("");
 
     useEffect(() => {
         selectProject();
     })
 
+    let projects: Array<object> = []; 
+
     let projectItem = {
-        name: "testItem really long  for content name long",
+        name: projectName,
+        limit: projectLimit,
         id: nanoid(),
     }
 
     function createNewProject() {
+        try {
+            openModal(true); 
+        } catch(e) {
+            console.error(e);
+        }
+    }
+
+    function createProject() {
         // wait to get projects from db asyncrounus? then update state
-        projects.push(projectItem);
-        projects.push(projectItem);
-        addProject(projects);
-        console.log(addedProject);
+        if (projectName !== "") {
+            projects.push(projectItem);
+            addProject(projects);
+            closeModal();
+        } else {
+            alert("Project name cant be empty");
+        }
+    }
+
+    function closeModal() {
+        if(openModal) {
+            openModal(false);
+        }
     }
 
     function selectProject() {
         const pContainer: any = document.querySelectorAll('.project-container');
-        // const selectFirstProject = pContainer[0];
+        // TODO: select first project after adding
 
         if (pContainer) {
             pContainer.forEach((item: any) => {
@@ -47,6 +68,30 @@ export default function Projects(props: any) {
         <div className="project-title-container">
             <span className='list-title'>Projects</span>
             <button onClick={createNewProject} className='add-project'><span></span></button>
+        </div>
+        <div className={`modal new-project-modal ${modal ? 'open' : ''}`}>
+            <div className="input-container">
+                <h2>Create new Project</h2>
+                <input
+                    type="text"
+                    className="input"
+                    value={projectName}
+                    onChange={(e) => setProjectName(e.target.value)}
+                    placeholder="Enter Project name"
+                />
+                <h4>Enter a Project time limit in hours (no limit if empty)</h4>
+                <input
+                    type="text"
+                    className="input"
+                    value={projectLimit}
+                    onChange={(e) => setProjectLimit(e.target.value)}
+                    placeholder="Project limit in h"
+                />
+            </div>
+            <div className="btn-container">
+                <button onClick={closeModal} className='btn-cancel'>cancel</button>
+                <button onClick={createProject} className='btn-create'>create</button>
+            </div>
         </div>
         <ul className='projects'>
             {
@@ -68,4 +113,8 @@ export default function Projects(props: any) {
         </ul>
         </>
     )
+}
+
+export function projectInfo() {
+ //f
 }

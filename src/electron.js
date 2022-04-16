@@ -11,8 +11,8 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 async function createWindow() {
   win = new BrowserWindow({
     width: 1140, height: 650,
-    minHeight: 350,
-    minWidth: 500,
+    minHeight: 450,
+    minWidth: 700,
     titleBarStyle: 'hidden',
     trafficLightPosition: { x: 18, y: 17 },
     webPreferences: {
@@ -41,6 +41,12 @@ async function createWindow() {
         });
         event.newGuest = new BrowserWindow(options);
       }
+    });
+
+    win.on('show', () => {
+      setTimeout(() => {
+        win.focus();
+      }, 200);
     });
 }
 
