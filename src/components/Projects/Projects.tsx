@@ -70,27 +70,29 @@ export default function Projects(props: any) {
             <button onClick={createNewProject} className='add-project'><span></span></button>
         </div>
         <div className={`modal new-project-modal ${modal ? 'open' : ''}`}>
-            <div className="input-container">
-                <h2>Create new Project</h2>
-                <input
-                    type="text"
-                    className="input"
-                    value={projectName}
-                    onChange={(e) => setProjectName(e.target.value)}
-                    placeholder="Enter Project name"
-                />
-                <h4>Enter a Project time limit in hours (no limit if empty)</h4>
-                <input
-                    type="text"
-                    className="input"
-                    value={projectLimit}
-                    onChange={(e) => setProjectLimit(e.target.value)}
-                    placeholder="Project limit in h"
-                />
-            </div>
-            <div className="btn-container">
-                <button onClick={closeModal} className='btn-cancel'>cancel</button>
-                <button onClick={createProject} className='btn-create'>create</button>
+            <div className="modal-content">
+                <div className="input-container">
+                    <h2>Create new Project</h2>
+                    <input
+                        type="text"
+                        className="input"
+                        value={projectName}
+                        onChange={(e) => setProjectName(e.target.value)}
+                        placeholder="Enter Project name"
+                    />
+                    <h4>Enter a Project time limit in hours (no limit if empty)</h4>
+                    <input
+                        type="text"
+                        className="input"
+                        value={projectLimit}
+                        onChange={(e) => setProjectLimit(e.target.value)}
+                        placeholder="Project limit in h"
+                    />
+                </div>
+                <div className="btn-container">
+                    <button onClick={closeModal} className='btn-cancel'>Cancel</button>
+                    <button onClick={createProject} className='btn-create'>Create</button>
+                </div>
             </div>
         </div>
         <ul className='projects'>
