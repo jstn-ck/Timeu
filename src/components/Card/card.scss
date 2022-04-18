@@ -1,0 +1,10 @@
+button.add-card {
+    position: absolute;
+    top: -55px;
+    left: 15px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    background-color: var(--green);
+    color: var(--white);
+    z-index: 999;
+}

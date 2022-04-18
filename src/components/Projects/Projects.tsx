@@ -1,45 +1,28 @@
 import './projects.scss';
-import React, { EffectCallback, useEffect, useState } from 'react';
-//nano id to easily generate random unique ids for projects/cards..
+import React, { EffectCallback, useContext, useEffect, useState } from 'react';
+// Nano id to easily generate random unique ids for projects/cards..
 import { nanoid } from 'nanoid'
-// model.id = nanoid() //=> "V1StGXR8_Z5jdHi6B-myT"
+// Moment JS for getting created at date/time
+import moment from "moment";
+import { SelectedProjectContext } from '@/views/Dashboard/Dashboard';
+//moment().format('MMMM Do YYYY, h:mm:ss a');
 
 export default function Projects(props: any) {
-  const [addedProject, addProject]: any = useState([]);
+  const [projectList, addToProjectList]: any = useState([]);
   const [modal, openModal] = useState(false);
   const [projectName, setProjectName] = useState("");
-  const [projectLimit, setProjectLimit] = useState("");
-
-  // TODO: current time connected with cards
+  const [projectLimit, setProjectLimit] = useState(0);
+  const { setSelectedProject } = useContext(SelectedProjectContext);
 
   useEffect(() => {
-    selectProject;
+    // selectProject;
   })
 
-  let projects: Array<object> = [];
-
-  let projectItem = {
-    name: projectName,
-    limit: projectLimit,
-    id: nanoid(),
-  }
-
-  function createNewProject() {
+  function openCreateNewProjectModal() {
     try {
       openModal(true);
     } catch (e) {
       console.error(e);
-    }
-  }
-
-  function createProject() {
-    // wait to get projects from db asyncrounus? then update state
-    if (projectName !== "") {
-      projects.push(projectItem);
-      addProject(projects);
-      closeModal();
-    } else {
-      alert("Project name cant be empty");
     }
   }
 
@@ -49,18 +32,43 @@ export default function Projects(props: any) {
     }
   }
 
-  function selectProject(p: any): any {
-    // TODO: Get current selected project.limit ...
-    console.log(p)
+  // wait to get projects from db asyncrounus? then update state
+  function createProject() {
+    const projectItem = [{
+      name: projectName,
+      limit: projectLimit,
+      id: nanoid(),
+      createdAt: moment().format('MM Do  YY, h:mm')
+    }]
+
+    if (projectName !== "") {
+      const newProject = projectList.concat(projectItem);
+      addToProjectList(newProject);
+
+      closeModal();
+    } else {
+      alert("Project name cant be empty");
+    }
+  }
+
+  const pContainer: any = document.querySelectorAll('.project-container')[0];
+  if (pContainer) {
+    console.log('test');
+    pContainer.classList.add('selected');
+  }
+
+  function selectProject(i: any): any {
+    setSelectedProject(projectList[i].id);
     const pContainer: any = document.querySelectorAll('.project-container');
     // TODO: select first project after adding
-
+    // Highlight selected Project with css class
     if (pContainer) {
       pContainer.forEach((item: any) => {
-        item.addEventListener('click', function() {
+        item.addEventListener('click', () => {
           for (let items of pContainer) {
             items.classList.remove('selected');
           }
+          // Set Context value for Cards
           item.classList.add('selected');
         })
       })
@@ -71,7 +79,7 @@ export default function Projects(props: any) {
     <>
       <div className="project-title-container">
         <span className='list-title'>Projects</span>
-        <button onClick={createNewProject} className='add-project'><span></span></button>
+        <button onClick={openCreateNewProjectModal} className='add-project'><span></span></button>
       </div>
       <div className={`modal new-project-modal ${modal ? 'open' : ''}`}>
         {/* modal content for fade-in scale-in animation to work */}
@@ -90,7 +98,7 @@ export default function Projects(props: any) {
               type="text"
               className="input"
               value={projectLimit}
-              onChange={(e) => setProjectLimit(e.target.value)}
+              onChange={(e) => setProjectLimit(parseInt(e.target.value))}
               placeholder="Project limit in h"
             />
           </div>
@@ -102,9 +110,9 @@ export default function Projects(props: any) {
       </div>
       <ul className='projects'>
         {
-          addedProject &&
-          addedProject.map((project: any, index: number) => (
-            <div onClick={selectProject(project)} key={project.id} className="project-container">
+          projectList &&
+          projectList.map((project: any, index: any) => (
+            <div onClick={() => selectProject(index)} key={project.id} className="project-container">
               <li className='project'>
                 <span className='project-name'>{project.name}</span>
                 <span className='project-time'>
@@ -116,12 +124,7 @@ export default function Projects(props: any) {
             </div>
           ))
         }
-        {props.children}
       </ul>
     </>
   )
-}
-
-export function projectInfo() {
-  //f
 }

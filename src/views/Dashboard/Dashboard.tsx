@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { createContext, useEffect, useReducer, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useHistory } from "react-router";
 import "./dashboard.scss";
@@ -7,7 +7,7 @@ import Settings from "@/components/Settings/Settings";
 import Titlebar from "@/components/Titlebar/Titlebar";
 import { LoadingScreen } from "@/components/LoadingScreen/LoadingScreen";
 import Projects from "@/components/Projects/Projects";
-import { Card } from "@/components/Card/Card";
+import { Cards } from "@/components/Card/Card";
 
 // How does this work ?
 // declare global {
@@ -16,9 +16,17 @@ import { Card } from "@/components/Card/Card";
 //   }
 // }
 
+export const SelectedProjectContext: any = createContext({});
+
+// function reducer(state: any, item: any) {
+//   return [...state, item]
+// }
+
 function Dashboard() {
   const [user, loading] = useAuthState(auth);
   const history = useHistory();
+
+  const [selectedProject, setSelectedProject] = useState("");
 
   useEffect((): any => {
     if (loading) {
@@ -86,26 +94,21 @@ function Dashboard() {
 
   return (
     <div className="dashboard">
-      <div className="project-list-pane">
-        <div className="app-control"></div>
-        <div className="container">
-          <Projects />
+      <SelectedProjectContext.Provider value={{selectedProject, setSelectedProject}}>
+        <div className="project-list-pane">
+          <div className="app-control"></div>
+          <div className="container">
+            <Projects />
+          </div>
         </div>
-      </div>
-      <div className="project-list-pane-resizer"></div>
-      <div className="main-pane">
-        <Titlebar default="default" />
-        <div className="container">
-          <Projects>
-            <Card />
-          </Projects>
-
-
-          Logged in as
-          <div>Test</div>
-          <div>{user?.email}</div>
+        <div className="project-list-pane-resizer"></div>
+        <div className="main-pane">
+          <Titlebar default="default" />
+          <div className="container">
+              <Cards />
+          </div>
         </div>
-      </div>
+      </SelectedProjectContext.Provider>
     </div>
   );
 }

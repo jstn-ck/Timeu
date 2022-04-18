@@ -1,6 +1,7 @@
 import './titlebar.scss';
 import React from 'react';
 import Settings from '@/components/Settings/Settings';
+import Projects from '../Projects/Projects';
 
 type TitlebarProps = {
   default: string,
