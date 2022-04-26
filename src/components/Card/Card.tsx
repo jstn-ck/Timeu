@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./card.scss";
+import "@/components/Projects/projects.scss";
 import { SelectedProjectContext } from "@/views/Dashboard/Dashboard";
-import { nanoid } from "nanoid";
+import { generateUid } from '@/helpers/uid';
 import moment from "moment";
 
 export function Cards() {
@@ -12,6 +13,11 @@ export function Cards() {
     const [cardName, setCardName] = useState("");
     const [cardDesc, setCardDesc] = useState("");
     const [cardLimit, setCardLimit] = useState(0);
+    const [selectedProjectCards, addSelectedProjectCards]: any = useState([]);
+
+    useEffect(() => {
+      mapSelectedCards();
+    }, [selectedProject])
 
     if (selectedProject) {
         console.log(selectedProject);
@@ -38,23 +44,34 @@ export function Cards() {
             limit: cardLimit,
             desc: cardDesc,
             category: selectedCategory,
-            id: nanoid(),
+            id: generateUid(),
             createdAt: moment().format('MM Do  YY, h:mm')
         }]
 
         if (cardName !== "") {
+            // concat returns array with item appended to the end
             const newCard = cardList.concat(cardItem);
             addToCardList(newCard);
-
+            mapSelectedCards();
             closeModal();
         } else {
-            alert("Project name cant be empty");
+            alert("Card name cant be empty");
         }
+    }
+
+    function mapSelectedCards() {
+        if (cardList) {
+            cardList.map((card: any) => {
+                if (card.project == selectedProject) {
+                    addSelectedProjectCards([card]);
+                  }
+              })
+          }
     }
 
     return (
         <>
-            <button onClick={openCreateCardModal} className='add-card'>New</button>
+            <button onClick={() => {selectedProject ? openCreateCardModal() : console.log('no project found')}} className={`${selectedProject? "" : "disabled"} add-card`}>New</button>
             <div className={`modal new-card-modal ${modal ? 'open' : ''}`}>
                 {/* modal content for fade-in scale-in animation to work */}
                 <div className="modal-content">
@@ -100,8 +117,8 @@ export function Cards() {
             </div>
             <div className='cards'>
                 {
-                    cardList &&
-                    cardList.map((card: any, index: any) => (
+                    selectedProjectCards &&
+                    selectedProjectCards.map((card: any, index: any) => (
                         <div key={card.id} className="card-container">
                             <h1>{card.name}</h1>
                         </div>

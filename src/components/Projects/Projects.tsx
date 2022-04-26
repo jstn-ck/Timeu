@@ -1,11 +1,10 @@
 import './projects.scss';
 import React, { EffectCallback, useContext, useEffect, useState } from 'react';
-// Nano id to easily generate random unique ids for projects/cards..
-import { nanoid } from 'nanoid'
+import { generateUid } from '@/helpers/uid';
 // Moment JS for getting created at date/time
 import moment from "moment";
-import { SelectedProjectContext } from '@/views/Dashboard/Dashboard';
 //moment().format('MMMM Do YYYY, h:mm:ss a');
+import { SelectedProjectContext } from '@/views/Dashboard/Dashboard';
 
 export default function Projects(props: any) {
   const [projectList, addToProjectList]: any = useState([]);
@@ -15,7 +14,6 @@ export default function Projects(props: any) {
   const { setSelectedProject } = useContext(SelectedProjectContext);
 
   useEffect(() => {
-    // selectProject;
   })
 
   function openCreateNewProjectModal() {
@@ -37,7 +35,7 @@ export default function Projects(props: any) {
     const projectItem = [{
       name: projectName,
       limit: projectLimit,
-      id: nanoid(),
+      id: generateUid(),
       createdAt: moment().format('MM Do  YY, h:mm')
     }]
 
@@ -51,11 +49,6 @@ export default function Projects(props: any) {
     }
   }
 
-  const pContainer: any = document.querySelectorAll('.project-container')[0];
-  if (pContainer) {
-    console.log('test');
-    pContainer.classList.add('selected');
-  }
 
   function selectProject(i: any): any {
     setSelectedProject(projectList[i].id);

@@ -8,11 +8,11 @@ export function ErrorMessage(message: string) {
         let errorMessage = document.createTextNode(message);
         div.appendChild(errorMessage);
         document.querySelectorAll('#root')[0].appendChild(div);
-    
+
         setTimeout(() => {
             div.classList.add('hidden');
         }, 4000)
-    
+
         setTimeout(() => {
             div.remove();
         }, 4400);

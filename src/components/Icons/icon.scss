@@ -3,9 +3,12 @@ svg {
     height: 100%;
 
     &.icon-settings {
-        fill: #363838;
-        background-color: green;
-        max-width: 25px;
+        fill: var(--grey);
+        max-width: 20px;
         display: block;
+
+        &:hover {
+          fill: var(--grey-2);
+        }
     }
 }

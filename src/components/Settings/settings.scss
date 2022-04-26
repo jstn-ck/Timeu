@@ -1,5 +1,6 @@
 .settings {
   position: absolute;
   right: 1em;
-  top: .7em;
+  top: 50%;
+  transform: translateY(-50%);
 }

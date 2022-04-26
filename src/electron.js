@@ -10,7 +10,7 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 
 async function createWindow() {
   win = new BrowserWindow({
-    width: 1140, height: 650,
+    width: 1140, height: 700,
     minHeight: 450,
     minWidth: 700,
     titleBarStyle: 'hidden',

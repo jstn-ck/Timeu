@@ -1,10 +1,26 @@
 button.add-card {
     position: absolute;
-    top: -55px;
+    top: -54px;
     left: 15px;
     padding: 10px 15px;
     border-radius: 5px;
-    background-color: var(--green);
+    background-color: darken(#4F90FF, 5);
     color: var(--white);
     z-index: 999;
+    font-weight: 600;
+    transition: 0.2s ease;
+
+    &.disabled {
+      background-color: var(--grey);
+    }
+}
+
+.modal {
+  &.new-card-modal {
+    max-height: 450px;
+
+    h2,h3 {
+      margin-top: 12px;
+    }
+  }
 }
