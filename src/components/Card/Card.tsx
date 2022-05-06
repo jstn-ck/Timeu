@@ -7,6 +7,7 @@ import moment from "moment";
 
 export function Cards() {
     const [cardList, addToCardList]: any = useState([]);
+    // Get values from contextprovider (from project)
     const { selectedProject } = useContext(SelectedProjectContext);
     const [selectedCategory, setCategory] = useState("");
     const [modal, openModal] = useState(false);
@@ -17,11 +18,12 @@ export function Cards() {
 
     useEffect(() => {
       mapSelectedCards();
-    }, [selectedProject])
+      // Renders component only if specified variables changes
+    }, [selectedProject, cardList])
 
-    if (selectedProject) {
+    if(selectedProject) {
         console.log(selectedProject);
-    }
+      }
 
     function openCreateCardModal() {
         try {
@@ -39,18 +41,19 @@ export function Cards() {
 
     function createCard() {
         const cardItem = [{
-            project: selectedProject,
+            projectId: selectedProject,
             name: cardName,
             limit: cardLimit,
             desc: cardDesc,
             category: selectedCategory,
             id: generateUid(),
-            createdAt: moment().format('MM Do  YY, h:mm')
+            createdAt: moment().format('MM.Do.YY, h:mm')
         }]
 
         if (cardName !== "") {
-            // concat returns array with item appended to the end
+            // concat returns new array with item appended to the end
             const newCard = cardList.concat(cardItem);
+
             addToCardList(newCard);
             mapSelectedCards();
             closeModal();
@@ -62,7 +65,7 @@ export function Cards() {
     function mapSelectedCards() {
         if (cardList) {
             cardList.map((card: any) => {
-                if (card.project == selectedProject) {
+                if (card.projectId == selectedProject) {
                     addSelectedProjectCards([card]);
                   }
               })
@@ -71,7 +74,7 @@ export function Cards() {
 
     return (
         <>
-            <button onClick={() => {selectedProject ? openCreateCardModal() : console.log('no project found')}} className={`${selectedProject? "" : "disabled"} add-card`}>New</button>
+            <button onClick={() => {selectedProject ? openCreateCardModal() : alert('create project first')}} className={`${selectedProject? "" : "disabled"} add-card`}>New Card</button>
             <div className={`modal new-card-modal ${modal ? 'open' : ''}`}>
                 {/* modal content for fade-in scale-in animation to work */}
                 <div className="modal-content">

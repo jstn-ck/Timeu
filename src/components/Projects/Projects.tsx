@@ -14,7 +14,19 @@ export default function Projects(props: any) {
   const { setSelectedProject } = useContext(SelectedProjectContext);
 
   useEffect(() => {
-  })
+    if(projectList.length >= 1) {
+      setSelectedProject(projectList[projectList.length - 1].id);
+      const pContainer: any = document.querySelectorAll('.project-container');
+      if(pContainer[pContainer.length - 1]) {
+          pContainer[pContainer.length - 1].classList.add('selected');
+          if(pContainer[pContainer.length - 2]) {
+              pContainer[pContainer.length - 2].classList.remove('selected');
+            }
+        }
+      }
+  }, [projectList])
+
+  // TODO: Another useEffect to get firebase data (use firebase data if data changes?)
 
   function openCreateNewProjectModal() {
     try {
@@ -30,19 +42,17 @@ export default function Projects(props: any) {
     }
   }
 
-  // wait to get projects from db asyncrounus? then update state
   function createProject() {
     const projectItem = [{
       name: projectName,
       limit: projectLimit,
       id: generateUid(),
-      createdAt: moment().format('MM Do  YY, h:mm')
+      createdAt: moment().format('MM.Do.YY, h:mm')
     }]
 
     if (projectName !== "") {
       const newProject = projectList.concat(projectItem);
       addToProjectList(newProject);
-
       closeModal();
     } else {
       alert("Project name cant be empty");
