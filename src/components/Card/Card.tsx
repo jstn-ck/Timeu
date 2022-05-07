@@ -14,12 +14,10 @@ export function Cards() {
     const [cardName, setCardName] = useState("");
     const [cardDesc, setCardDesc] = useState("");
     const [cardLimit, setCardLimit] = useState(0);
-    const [selectedProjectCards, addSelectedProjectCards]: any = useState([]);
 
-    useEffect(() => {
-      mapSelectedCards();
-      // Renders component only if specified variables changes
-    }, [selectedProject, cardList])
+    // useEffect(() => {
+    //   // Renders component only if specified variables changes
+    // }, [selectedProject, cardList])
 
     if(selectedProject) {
         console.log(selectedProject);
@@ -51,32 +49,20 @@ export function Cards() {
         }]
 
         if (cardName !== "") {
-            // concat returns new array with item appended to the end
+            // concat returns new array with cardItem appended to the end
             const newCard = cardList.concat(cardItem);
 
             addToCardList(newCard);
-            mapSelectedCards();
             closeModal();
         } else {
             alert("Card name cant be empty");
         }
     }
 
-    function mapSelectedCards() {
-        if (cardList) {
-            cardList.map((card: any) => {
-                if (card.projectId == selectedProject) {
-                    addSelectedProjectCards([card]);
-                  }
-              })
-          }
-    }
-
     return (
         <>
             <button onClick={() => {selectedProject ? openCreateCardModal() : alert('create project first')}} className={`${selectedProject? "" : "disabled"} add-card`}>New Card</button>
             <div className={`modal new-card-modal ${modal ? 'open' : ''}`}>
-                {/* modal content for fade-in scale-in animation to work */}
                 <div className="modal-content">
                     <div className="input-container">
                         <h2>Create new Card</h2>
@@ -120,12 +106,15 @@ export function Cards() {
             </div>
             <div className='cards'>
                 {
-                    selectedProjectCards &&
-                    selectedProjectCards.map((card: any, index: any) => (
-                        <div key={card.id} className="card-container">
-                            <h1>{card.name}</h1>
-                        </div>
-                    ))
+                    cardList.map((card: any) => {
+                        if (card.projectId == selectedProject) {
+                            return (
+                            <div key={card.id} className="card-container">
+                                <h1>{card.name}</h1>
+                            </div>
+                            )
+                          }
+                      })
                 }
             </div>
         </>

@@ -63,8 +63,8 @@ export default function Projects(props: any) {
   function selectProject(i: any): any {
     setSelectedProject(projectList[i].id);
     const pContainer: any = document.querySelectorAll('.project-container');
-    // TODO: select first project after adding
-    // Highlight selected Project with css class
+
+    // Highlights selected Project with css class
     if (pContainer) {
       pContainer.forEach((item: any) => {
         item.addEventListener('click', () => {
