@@ -11,4 +11,12 @@ svg {
           fill: var(--grey-2);
         }
     }
+
+    &.icon-filter {
+        position: relative;
+        fill: var(--blue);
+        max-width: 15px;
+        display: inline-block;
+        top: 3px;
+    }
 }

@@ -96,7 +96,7 @@ export default function Projects(props: any) {
               onChange={(e) => setProjectName(e.target.value)}
               placeholder="Enter Project name"
             />
-            <h4>Enter a Project time limit in hours (no limit if empty)</h4>
+            <h4>Enter a Project time limit in hours (default is no limit)</h4>
             <input
               type="text"
               className="input"

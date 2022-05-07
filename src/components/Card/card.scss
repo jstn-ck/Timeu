@@ -24,3 +24,21 @@ button.add-card {
     }
   }
 }
+
+.category-filter {
+  select {
+    background-color: transparent;
+    border-radius: 5px;
+    outline: 0;
+    padding: 5px;
+    color: var(--blue);
+    border: 0;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .filter-info {
+    padding-top: 6px;
+  }
+}
+

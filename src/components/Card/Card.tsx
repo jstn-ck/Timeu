@@ -4,6 +4,7 @@ import "@/components/Projects/projects.scss";
 import { SelectedProjectContext } from "@/views/Dashboard/Dashboard";
 import { generateUid } from '@/helpers/uid';
 import moment from "moment";
+import FIcon from '@/components/Icons/FilterIcon';
 
 export function Cards() {
     const [cardList, addToCardList]: any = useState([]);
@@ -14,6 +15,7 @@ export function Cards() {
     const [cardName, setCardName] = useState("");
     const [cardDesc, setCardDesc] = useState("");
     const [cardLimit, setCardLimit] = useState(0);
+    const [filterCards, setFilterCards] = useState("All");
 
     // useEffect(() => {
     //   // Renders component only if specified variables changes
@@ -105,17 +107,73 @@ export function Cards() {
                 </div>
             </div>
             <div className='cards'>
-                {
-                    cardList.map((card: any) => {
-                        if (card.projectId == selectedProject) {
-                            return (
-                            <div key={card.id} className="card-container">
-                                <h1>{card.name}</h1>
-                            </div>
-                            )
-                          }
-                      })
-                }
+                <div className='category-filter'>
+                        <span className='filter-info'><FIcon /></span>
+                        <select value={filterCards} onChange={(e) => setFilterCards(e.target.value)} name="category" className="filtered-category">
+                            <option value="All"> All</option>
+                            <option value="Feature"> Feature</option>
+                            <option value="Task"> Task</option>
+                            <option value="Bug"> Bug</option>
+                        </select>
+                </div>
+                <div className='category all'>
+                    {
+                        filterCards == 'All' &&
+                        cardList.map((card: any) => {
+                            console.log(card.category)
+                            if (card.projectId == selectedProject) {
+                                return (
+                                <div key={card.id} className="card-container">
+                                    <h1>{card.name} {card.category}</h1>
+                                </div>
+                                )
+                              }
+                          })
+                    }
+                </div>
+                <div className='category task'>
+                    {
+                        filterCards == 'Task' &&
+                        cardList.map((card: any) => {
+                            console.log(card.category)
+                            if (card.projectId == selectedProject && card.category == 'Task') {
+                                return (
+                                <div key={card.id} className="card-container">
+                                    <h1>{card.name} {card.category}</h1>
+                                </div>
+                                )
+                              }
+                          })
+                    }
+                </div>
+                <div className='category feature'>
+                    {
+                        filterCards == "Feature" &&
+                        cardList.map((card: any) => {
+                            if (card.projectId == selectedProject && card.category == 'Feature') {
+                                return (
+                                <div key={card.id} className="card-container">
+                                    <h1>{card.name} {card.category}</h1>
+                                </div>
+                                )
+                              }
+                          })
+                    }
+                </div>
+                <div className='category bug'>
+                    {
+                        filterCards == "Bug" &&
+                        cardList.map((card: any) => {
+                            if (card.projectId == selectedProject && card.category == 'Bug') {
+                                return (
+                                <div key={card.id} className="card-container">
+                                    <h1>{card.name} {card.category}</h1>
+                                </div>
+                                )
+                              }
+                          })
+                    }
+                </div>
             </div>
         </>
     )
