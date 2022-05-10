@@ -3,24 +3,12 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useHistory } from "react-router";
 import "./dashboard.scss";
 import { auth, db } from "@/firebase/firebase";
-import Settings from "@/components/Settings/Settings";
 import Titlebar from "@/components/Titlebar/Titlebar";
 import { LoadingScreen } from "@/components/LoadingScreen/LoadingScreen";
 import Projects from "@/components/Projects/Projects";
 import { Cards } from "@/components/Card/Card";
 
-// How does this work ?
-// declare global {
-//   interface Window {
-//     width: any;
-//   }
-// }
-
 export const SelectedProjectContext: any = createContext({});
-
-// function reducer(state: any, item: any) {
-//   return [...state, item]
-// }
 
 function Dashboard() {
   const [user, loading] = useAuthState(auth);
@@ -42,7 +30,7 @@ function Dashboard() {
   async function handleSidebarResize(): Promise<void> {
     const sidebarResizer: Object | any = document.querySelectorAll('.project-list-pane-resizer')[0];
     const sidebar: Object | any = document.querySelectorAll('.project-list-pane')[0];
-    
+
     let mouseX = 0;
     const maxWidth = 400;
     const minWidth = 135;
