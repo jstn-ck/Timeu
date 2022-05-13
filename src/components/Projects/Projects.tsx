@@ -1,7 +1,7 @@
 import './projects.scss';
-import React, { EffectCallback, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { generateUid } from '@/helpers/uid';
-// Moment JS for getting created at date/time
+// Moment JS for getting createdAt date/time
 import moment from "moment";
 //moment().format('MMMM Do YYYY, h:mm:ss a');
 import { SelectedProjectContext } from '@/views/Dashboard/Dashboard';
@@ -11,6 +11,7 @@ export default function Projects(props: any) {
   const [modal, openModal] = useState(false);
   const [projectName, setProjectName] = useState("");
   const [projectLimit, setProjectLimit] = useState(0);
+  const [projectCurrentTime, setProjectCurrentTime] = useState(0);
   const { setSelectedProject } = useContext(SelectedProjectContext);
 
   useEffect(() => {
@@ -64,19 +65,24 @@ export default function Projects(props: any) {
     setSelectedProject(projectList[i].id);
     const pContainer: any = document.querySelectorAll('.project-container');
 
-    // Highlights selected Project with css class
+    // Css class to highlight selected project
     if (pContainer) {
       pContainer.forEach((item: any) => {
         item.addEventListener('click', () => {
           for (let items of pContainer) {
             items.classList.remove('selected');
           }
-          // Set Context value for Cards
           item.classList.add('selected');
         })
       })
     }
   }
+
+  // Context provider, cards component provides projects with sum of cards, useEffect for projects
+  function sumCardCurrentTimes() {
+      console.log('efwefw');
+      return 1;
+    }
 
   return (
     <>
@@ -119,9 +125,9 @@ export default function Projects(props: any) {
               <li className='project'>
                 <span className='project-name'>{project.name}</span>
                 <span className='project-time'>
-                  <span className="project-current">4h </span>
+                  <span className="project-current">{projectCurrentTime} </span>
                   <span className="project-time-seperator">| </span>
-                  <span className="project-limit">4.2h</span>
+                  <span className="project-limit">{projectLimit}</span>
                 </span>
               </li>
             </div>

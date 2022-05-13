@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useReducer, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useHistory } from "react-router";
 import "./dashboard.scss";
@@ -8,13 +8,16 @@ import { LoadingScreen } from "@/components/LoadingScreen/LoadingScreen";
 import Projects from "@/components/Projects/Projects";
 import { Cards } from "@/components/Card/Card";
 
+// Context Providers so projects and cards components can use these values as states
 export const SelectedProjectContext: any = createContext({});
+export const SumCardsCurrentTimesContext: any = createContext({});
 
 function Dashboard() {
   const [user, loading] = useAuthState(auth);
   const history = useHistory();
 
   const [selectedProject, setSelectedProject] = useState("");
+  const [sumCardsCurrent, setSumCardsCurrent] = useState(0);
 
   useEffect((): any => {
     if (loading) {
@@ -83,19 +86,21 @@ function Dashboard() {
   return (
     <div className="dashboard">
       <SelectedProjectContext.Provider value={{selectedProject, setSelectedProject}}>
-        <div className="project-list-pane">
-          <div className="app-control"></div>
-          <div className="container">
-            <Projects />
+        <SumCardsCurrentTimesContext.Provider value={{sumCardsCurrent, setSumCardsCurrent}}>
+          <div className="project-list-pane">
+            <div className="app-control"></div>
+            <div className="container">
+              <Projects />
+            </div>
           </div>
-        </div>
-        <div className="project-list-pane-resizer"></div>
-        <div className="main-pane">
-          <Titlebar default="default" />
-          <div className="container">
-              <Cards />
+          <div className="project-list-pane-resizer"></div>
+          <div className="main-pane">
+            <Titlebar default="default" />
+            <div className="container">
+                <Cards />
+            </div>
           </div>
-        </div>
+        </SumCardsCurrentTimesContext.Provider>
       </SelectedProjectContext.Provider>
     </div>
   );

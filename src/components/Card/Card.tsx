@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import "./card.scss";
 import "@/components/Projects/projects.scss";
 import { SelectedProjectContext } from "@/views/Dashboard/Dashboard";
+import { SumCardsCurrentTimesContext } from "@/views/Dashboard/Dashboard";
 import { generateUid } from '@/helpers/uid';
 import moment from "moment-with-locales-es6";
 import FIcon from '@/components/Icons/FilterIcon';
-import formatTime from '@/components/Timer/Timer';
 import Timer from '@/components/Timer/Timer';
 moment.locale('de');
 
@@ -13,23 +13,26 @@ moment.locale('de');
 export const CardWithTimer = (props: any) => {
     const [cardCurrent, setCardCurrent] = useState(0);
 
-    const getTime = (val:any) => {
-      console.log(val);
-        setCardCurrent(val);
-        props.getCurrentFromCard(cardCurrent, props.id);
-      }
+    // Get Time gets the current time in hours from child Timer component
+    const getTime = (timeInHours: any) => {
+      setCardCurrent(timeInHours);
+      // Card component gives current time with id to parent Cards component
+      props.getCurrentFromCard(cardCurrent, props.id);
+    }
 
 
     // Cards get filtered based on class to prevent timer reset
     return (
       <div key={props.id} className={`card-container
-      ${props.selectedCategory == props.category ? props.category : ''} ${props.selectedCategory == 'All' ? props.category : ''}`}>
+          ${props.selectedCategory == props.category ? props.category : ''}
+          ${props.selectedCategory == 'All' ? props.category : ''}`}>
         <span className="card-created-at">{props.createdAt}</span>
         <h3 className="card-category">{props.category}</h3>
         <h2 className="card-name">{props.name}</h2>
         <p className="card-desc">{props.description}</p>
-        <span className="card-current">{cardCurrent}</span>
+        <span className="card-current">{cardCurrent}h</span>
         <span className="card-limit">{props.limit}</span>
+
         <Timer getCardId={props.getCardId} getTimeFromTimer={getTime} />
       </div>
     )
@@ -39,24 +42,29 @@ export function Cards() {
     const [cardList, addToCardList]: any = useState([]);
     // Get values from contextprovider (from project)
     const { selectedProject } = useContext(SelectedProjectContext);
+    const { setSumCardsCurrent } = useContext(SumCardsCurrentTimesContext);
     const [selectedCategory, setCategory] = useState("All");
     const [modal, openModal] = useState(false);
     const [cardName, setCardName] = useState("");
     const [cardDesc, setCardDesc] = useState("");
     const [cardLimit, setCardLimit] = useState(0);
     const [filterCards, setFilterCards] = useState("All");
-    const [cardCurrent, setCardCurrent] = useState(0);
 
     if(selectedProject) {
-        console.log(selectedProject);
-      }
+      console.log(selectedProject);
+      console.log(cardList.length);
+      if (cardList.length > 0) {
 
-    function updateCardCurrent(val1: any, val2: any) {
-        console.log(val1,val2);
+        }
+    }
+
+    // Gets values from child Card and updates the current time of the selected Card
+    function updateCardCurrent(selectedCardCurrent: any, selectedCardId: any) {
         if(cardList) {
-            cardList.map((card:any) => {
-                if(card.id == val2) {
-                    card.current = val1;
+            cardList.map((card: any) => {
+                if(card.id == selectedCardId) {
+                    card.current = selectedCardCurrent;
+                    console.log(cardList);
                   }
               })
           }
@@ -74,7 +82,6 @@ export function Cards() {
     function openCreateCardModal() {
         try {
             openModal(true);
-            console.log(cardList);
         } catch (e) {
             console.error(e);
         }
@@ -95,7 +102,7 @@ export function Cards() {
             projectId: selectedProject,
             name: cardName,
             limit: cardLimit,
-            current: cardCurrent,
+            current: 0,
             desc: cardDesc,
             category: selectedCategory,
             id: generateUid(),
@@ -141,7 +148,8 @@ export function Cards() {
                             placeholder="Enter Card description"
                         />
                         <h3>Select a category</h3>
-                        <select value={selectedCategory} onChange={(e) => setCategory(e.target.value)} name="category" className="category-select">
+                        <select value={selectedCategory} onChange={(e) => setCategory(e.target.value)}
+                              name="category" className="category-select">
                             <option value="All">All</option>
                             <option value="Feature">Feature</option>
                             <option value="Task">Task</option>
@@ -183,6 +191,7 @@ export function Cards() {
                                     name={card.name}
                                     category={card.category}
                                     description={card.desc}
+                                    limit={card.limit}
                                     createdAt={card.createdAt}
                                     getCardId={card.id}
                                     selectedCategory={filterCards}
