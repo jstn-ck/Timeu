@@ -5,14 +5,16 @@ import { generateUid } from '@/helpers/uid';
 import moment from "moment";
 //moment().format('MMMM Do YYYY, h:mm:ss a');
 import { SelectedProjectContext } from '@/views/Dashboard/Dashboard';
+import { SumCardsCurrentTimesContext } from '@/views/Dashboard/Dashboard';
 
 export default function Projects(props) {
   const [projectList, addToProjectList] = useState([]);
   const [modal, openModal] = useState(false);
   const [projectName, setProjectName] = useState("");
   const [projectLimit, setProjectLimit] = useState(0);
-  const [projectCurrentTime, setProjectCurrentTime] = useState(0);
+  const [projectCurrentTime, setProjectCurrentTime] = useState("0");
   const { setSelectedProject } = useContext(SelectedProjectContext);
+  const { sumCardsCurrent } = useContext(SumCardsCurrentTimesContext);
 
   useEffect(() => {
     if(projectList.length >= 1) {
@@ -26,6 +28,13 @@ export default function Projects(props) {
         }
       }
   }, [projectList])
+
+  useEffect(() => {
+    console.log(sumCardsCurrent, 'AAAAAAAAA TODO PROGRESS BAR');
+    if(sumCardsCurrent) {
+      setProjectCurrentTime(sumCardsCurrent);
+    }
+  }, [sumCardsCurrent])
 
   // TODO: Another useEffect to get firebase data (use firebase data if data changes?)
 
@@ -77,11 +86,6 @@ export default function Projects(props) {
       })
     }
   }
-
-  // Context provider, cards component provides projects with sum of cards, useEffect for projects
-  function sumCardCurrentTimes() {
-      return 1;
-    }
 
   return (
     <>

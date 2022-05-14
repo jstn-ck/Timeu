@@ -5,17 +5,18 @@ function Timer(props) {
   const [timer, setTimer] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(true);
-  const progressBarWidth = useRef(0);
+  const progressBarWidthRef = useRef(0);
   // Use Ref does not cause re render after every update, is needed because timer is already re rendering component
   const countRef = useRef(null);
 
   useEffect(() => {
+    console.log(props.timerActive)
       startTimerIfActive()
     }, [props.timerActive])
 
   useEffect(() => {
       calculateProgress();
-    }, [timer])
+    })
 
   function calculateProgPxPerSecond() {
       let progressBarMaxWidth = 225;
@@ -35,7 +36,7 @@ function Timer(props) {
   function calculateProgress() {
       const progressBar = document.querySelectorAll('.card-progressbar')[0];
 
-      if (props.timerActive == false || isActive == false) {
+      if (props.timerActive == false && isActive == false) {
         if (progressBar) {
           if (props.cardLimit != undefined && props.cardLimit != 0) {
             console.log("NO INTERVAL")
@@ -46,7 +47,7 @@ function Timer(props) {
           if (progressBar) {
             if (props.cardLimit != undefined && props.cardLimit != 0) {
               console.log('INTERVAL');
-                progressBarWidth.current = setInterval(() => {
+                progressBarWidthRef.current = setInterval(() => {
                   progressBar.style.width = calculateProgPxPerSecond() + 'px';
                   }, 1000)
               }
@@ -57,7 +58,6 @@ function Timer(props) {
   const startTimerIfActive = () => {
       if(props.timerActive == true) {
         // get time that timer was active and add to new timer
-
           setIsActive(true)
           setIsPaused(false)
           countRef.current = setInterval(() => {
@@ -67,40 +67,36 @@ function Timer(props) {
     }
 
   const handleStart = () => {
-    setIsActive(true)
-    setIsPaused(false)
-    calculateProgress();
-
     if(props.timerActive == false) {
+        console.log('timer to tru')
         props.handleTimerActive(true);
+        setIsActive(true);
+        setIsPaused(false);
       }
 
-    countRef.current = setInterval(() => {
-      setTimer((timer) => timer + 10)
-    }, 1000)
+    calculateProgress();
+
+    if (!isActive) {
+      countRef.current = setInterval(() => {
+        setTimer((timer) => timer + 10)
+      }, 1000)
+    }
   }
 
   const handlePause = () => {
-    clearInterval(countRef.current);
-    clearInterval(progressBarWidth.current);
-    setIsPaused(true);
-
-    if (props.timerActive == true) {
+    console.log(props.timerActive)
         props.handleTimerActive(false);
-      }
-  }
+        console.log('SET TIMER FALSE')
 
-  const handleResume = () => {
-    calculateProgress();
-    setIsPaused(false);
-    countRef.current = setInterval(() => {
-      setTimer((timer) => timer + 10);
-    }, 1000)
+    clearInterval(countRef.current);
+    clearInterval(progressBarWidthRef.current);
+    setIsPaused(true);
+    setIsActive(false);
   }
 
   const handleReset = () => {
     clearInterval(countRef.current);
-    clearInterval(progressBarWidth.current);
+    clearInterval(progressBarWidthRef.current);
     setIsActive(false);
     setIsPaused(true);
     setTimer(0);
@@ -112,16 +108,9 @@ function Timer(props) {
           <div className="card-progressbar"></div>
           <p>{formatTime(timer)}</p>
           <div className='buttons'>
-            {
-              !isActive && isPaused ?
-                <button onClick={handleStart}>Start</button>
-                : (
-                  //Child(Timer) to parent(Card) communication
-                  !isPaused ? <button onClick={() => { props.getTimeFromTimer(getTimeInHours(timer)); handlePause();}}>Pause</button> :
-                    <button onClick={handleResume}>Resume</button>
-                )
-            }
-            <button onClick={handleReset} disabled={!isActive}>Reset</button>
+            <button disabled={isActive} onClick={handleStart}>Start</button>
+            <button onClick={() => { props.getTimeFromTimer(getTimeInHours(timer)); handlePause();}}>Pause</button>
+            <button onClick={handleReset}>Reset</button>
           </div>
         </div>
   )

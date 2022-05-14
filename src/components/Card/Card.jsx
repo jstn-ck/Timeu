@@ -7,6 +7,7 @@ import { generateUid } from '@/helpers/uid';
 import moment from "moment-with-locales-es6";
 import FIcon from '@/components/Icons/FilterIcon';
 import Timer from '@/components/Timer/Timer';
+// Set momentjs to get german format
 moment.locale('de');
 
 // Creates the html structure for a Card with a timer
@@ -23,6 +24,7 @@ export const CardWithTimer = (props) => {
       }, [props.getCurrent])
 
     const handleTimerActive = (setTimerActive) => {
+      console.log('woop');
         props.handleTimerActive(setTimerActive, props.id);
       }
 
@@ -81,11 +83,15 @@ export function Cards() {
     function sumCardCurrentTimes() {
         if(selectedProject) {
           if (cardList.length > 0) {
+            let sumCurrents = 0;
               cardList.map((card) => {
                   if(selectedProject == card.projectId) {
-                    console.log('TODO SUM');
+                    // Convert card current from string to float and add with sumCurrents
+                    // toFixed return given digits after decimal point
+                    sumCurrents = +(sumCurrents + parseFloat(card.current)).toFixed(12);
                   }
                 })
+            setSumCardsCurrent(sumCurrents);
             }
         }
       }
