@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./timer.scss";
 
-function Timer(props: any) {
+function Timer(props) {
   const [timer, setTimer] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(true);
-  const progressBarWidth: any = useRef(0);
+  const progressBarWidth = useRef(0);
   // Use Ref does not cause re render after every update, is needed because timer is already re rendering component
-  const countRef: any = useRef(null);
+  const countRef = useRef(null);
 
   useEffect(() => {
       startTimerIfActive()
@@ -33,7 +33,7 @@ function Timer(props: any) {
     }
 
   function calculateProgress() {
-      const progressBar: any = document.querySelectorAll('.card-progressbar')[0];
+      const progressBar = document.querySelectorAll('.card-progressbar')[0];
 
       if (props.timerActive == false || isActive == false) {
         if (progressBar) {
@@ -127,16 +127,16 @@ function Timer(props: any) {
   )
 }
 
-const getTimeInHours = (timer: any): any => {
+const getTimeInHours = (timer) => {
     // toFixed formats decimal with 2 numbers
     const timeInHours = `${(timer / 60 / 60).toFixed(2)}`;
     return timeInHours;
   }
 
-const formatTime = (timer: any) => {
+const formatTime = (timer) => {
   // Slice(-2) returns last 2 items of string/array item
   const getSeconds = `0${(timer % 60)}`.slice(-2);
-  const minutes: any = `${Math.floor(timer / 60)}`;
+  const minutes = `${Math.floor(timer / 60)}`;
   const getMinutes = `0${minutes % 60}`.slice(-2);
   const getHours = `0${Math.floor(timer / 3600)}`.slice(-2);
 

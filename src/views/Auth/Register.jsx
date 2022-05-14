@@ -6,16 +6,16 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import "./login.scss";
 import { ErrorModal } from '@/components/ErrorModal/ErrorModal';
 
-const registerWithEmailAndPassword = async (email: string, password: string) => {
+const registerWithEmailAndPassword = async (email, password) => {
   try {
     const res = await auth.createUserWithEmailAndPassword(email, password);
     const user = res.user;
     await db.collection("users").add({
-      uid: user!.uid,
+      uid: user.uid,
       authProvider: "local",
       email,
     });
-  } catch (err: any) {
+  } catch (err) {
     if(err) {
       ErrorModal('User exists already');
     }

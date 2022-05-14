@@ -5,11 +5,11 @@ import { Link } from "react-router-dom";
 import { auth } from "@/firebase/firebase";
 import "./login.scss";
 
-const sendPasswordResetEmail = async (email: string) => {
+const sendPasswordResetEmail = async (email) => {
   try {
     await auth.sendPasswordResetEmail(email);
     alert("Password reset link sent!");
-  } catch (err: any) {
+  } catch (err) {
     console.error(err);
   }
 };

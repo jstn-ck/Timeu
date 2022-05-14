@@ -1,4 +1,4 @@
-export let settingItems: { settingName: string, settingFunction: string }[] = [
+export let settingItems = [
   {
     settingName: "Dark Mode",
     settingFunction: "toggleDarkMode",

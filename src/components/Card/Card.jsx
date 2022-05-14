@@ -10,7 +10,7 @@ import Timer from '@/components/Timer/Timer';
 moment.locale('de');
 
 // Creates the html structure for a Card with a timer
-export const CardWithTimer = (props: any) => {
+export const CardWithTimer = (props) => {
     const [cardCurrent, setCardCurrent] = useState(0);
 
     useEffect(() => {
@@ -22,12 +22,12 @@ export const CardWithTimer = (props: any) => {
           }
       }, [props.getCurrent])
 
-    const handleTimerActive = (setTimerActive: any) => {
+    const handleTimerActive = (setTimerActive) => {
         props.handleTimerActive(setTimerActive, props.id);
       }
 
     // Get Time gets the current time in hours from child Timer component
-    const getTime = (timeInHours: any) => {
+    const getTime = (timeInHours) => {
       setCardCurrent(timeInHours);
       // Card component gives current time with id to parent Cards component
       props.getCurrentFromCard(timeInHours, props.id);
@@ -59,7 +59,7 @@ export const CardWithTimer = (props: any) => {
 }
 
 export function Cards() {
-    const [cardList, addToCardList]: any = useState([]);
+    const [cardList, addToCardList] = useState([]);
     // Get values from contextprovider (from project)
     const { selectedProject } = useContext(SelectedProjectContext);
     const { setSumCardsCurrent } = useContext(SumCardsCurrentTimesContext);
@@ -81,7 +81,7 @@ export function Cards() {
     function sumCardCurrentTimes() {
         if(selectedProject) {
           if (cardList.length > 0) {
-              cardList.map((card: any) => {
+              cardList.map((card) => {
                   if(selectedProject == card.projectId) {
                     console.log('TODO SUM');
                   }
@@ -91,9 +91,9 @@ export function Cards() {
       }
 
     // Gets values from child Card and updates the current time of the selected Card
-    function updateCardCurrent(selectedCardCurrent: any, selectedCardId: any) {
+    function updateCardCurrent(selectedCardCurrent, selectedCardId) {
         if(cardList) {
-            cardList.map((card: any) => {
+            cardList.map((card) => {
                 if(card.id == selectedCardId) {
                   if(selectedCardCurrent > 0) {
                       card.current = selectedCardCurrent;
@@ -105,16 +105,16 @@ export function Cards() {
           }
       }
 
-    function handleTimerActive(setTimerActive: any, selectedCardId: any) {
+    function handleTimerActive(setTimerActive, selectedCardId) {
       if(cardList) {
           if(setTimerActive == true) {
-              cardList.map((card: any) => {
+              cardList.map((card) => {
                   if(card.id == selectedCardId) {
                       card.timerActive = true;
                     }
                 })
             } else if(setTimerActive == false) {
-                cardList.map((card: any) => {
+                cardList.map((card) => {
                     if(card.id == selectedCardId) {
                         card.timerActive = false;
                       }
@@ -237,7 +237,7 @@ export function Cards() {
                     {
                         filterCards &&
                         cardList &&
-                        cardList.map((card: any) => {
+                        cardList.map((card) => {
                             if (card.projectId == selectedProject) {
                                 return (<CardWithTimer
                                     key={card.id}

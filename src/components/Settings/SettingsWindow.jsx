@@ -4,19 +4,15 @@ import ReactDOM from "react-dom";
 import { useHistory } from "react-router";
 import { auth, db } from "@/firebase/firebase";
 
-type SettWinProps = {
-  onClose(): void;
-}
-
-export default class SettingsWindow extends Component<SettWinProps> {
-  constructor(props: SettWinProps) {
+export default class SettingsWindow extends Component {
+  constructor(props) {
     super(props);
   }
-  private settContainer = document.createElement('div');
-  private logoutContainer = document.createElement('button');
+  settContainer = document.createElement('div');
+  logoutContainer = document.createElement('button');
 
   // reference of the window
-  private externalWindow: null | Window = null;
+  externalWindow = null;
 
   componentDidMount() {
     let externalWindow = window.open('', 'Preferences ');

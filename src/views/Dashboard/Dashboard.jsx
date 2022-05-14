@@ -9,8 +9,8 @@ import Projects from "@/components/Projects/Projects";
 import { Cards } from "@/components/Card/Card";
 
 // Context Providers so projects and cards components can use these values as states
-export const SelectedProjectContext: any = createContext({});
-export const SumCardsCurrentTimesContext: any = createContext({});
+export const SelectedProjectContext = createContext({});
+export const SumCardsCurrentTimesContext = createContext({});
 
 function Dashboard() {
   const [user, loading] = useAuthState(auth);
@@ -19,7 +19,7 @@ function Dashboard() {
   const [selectedProject, setSelectedProject] = useState("");
   const [sumCardsCurrent, setSumCardsCurrent] = useState(0);
 
-  useEffect((): any => {
+  useEffect(() => {
     if (loading) {
       return <LoadingScreen />
     };
@@ -30,15 +30,15 @@ function Dashboard() {
     handleSidebarResize();
   }, [user, loading]);
 
-  async function handleSidebarResize(): Promise<void> {
-    const sidebarResizer: Object | any = document.querySelectorAll('.project-list-pane-resizer')[0];
-    const sidebar: Object | any = document.querySelectorAll('.project-list-pane')[0];
+  async function handleSidebarResize() {
+    const sidebarResizer = document.querySelectorAll('.project-list-pane-resizer')[0];
+    const sidebar = document.querySelectorAll('.project-list-pane')[0];
 
     let mouseX = 0;
     const maxWidth = 400;
     const minWidth = 135;
 
-    sidebarResizer.addEventListener("mousedown", (e: any) => {
+    sidebarResizer.addEventListener("mousedown", (e) => {
       e.preventDefault();
       mouseX = e.x;
 
@@ -57,7 +57,7 @@ function Dashboard() {
       }, false);
     });
 
-    function resizeSidebar(e: any): void {
+    function resizeSidebar(e) {
       sidebar.style.flexBasis = e.x + "px";
 
       if ((parseInt(getComputedStyle(sidebar, '').flexBasis) >= maxWidth)) {

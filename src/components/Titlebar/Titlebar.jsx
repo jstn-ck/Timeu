@@ -3,16 +3,8 @@ import React from 'react';
 import Settings from '@/components/Settings/Settings';
 import Projects from '../Projects/Projects';
 
-type TitlebarProps = {
-  default: string,
-}
-
-type TitlebarState = {
-  default: string,
-}
-
-export default class Titlebar extends React.Component<TitlebarProps, TitlebarState> {
-  constructor(props: TitlebarProps) {
+export default class Titlebar extends React.Component {
+  constructor(props) {
     super(props);
   }
 

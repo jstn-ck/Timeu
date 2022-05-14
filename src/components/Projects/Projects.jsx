@@ -6,8 +6,8 @@ import moment from "moment";
 //moment().format('MMMM Do YYYY, h:mm:ss a');
 import { SelectedProjectContext } from '@/views/Dashboard/Dashboard';
 
-export default function Projects(props: any) {
-  const [projectList, addToProjectList]: any = useState([]);
+export default function Projects(props) {
+  const [projectList, addToProjectList] = useState([]);
   const [modal, openModal] = useState(false);
   const [projectName, setProjectName] = useState("");
   const [projectLimit, setProjectLimit] = useState(0);
@@ -17,7 +17,7 @@ export default function Projects(props: any) {
   useEffect(() => {
     if(projectList.length >= 1) {
       setSelectedProject(projectList[projectList.length - 1].id);
-      const pContainer: any = document.querySelectorAll('.project-container');
+      const pContainer = document.querySelectorAll('.project-container');
       if(pContainer[pContainer.length - 1]) {
           pContainer[pContainer.length - 1].classList.add('selected');
           if(pContainer[pContainer.length - 2]) {
@@ -61,13 +61,13 @@ export default function Projects(props: any) {
   }
 
 
-  function selectProject(i: any): any {
+  function selectProject(i) {
     setSelectedProject(projectList[i].id);
-    const pContainer: any = document.querySelectorAll('.project-container');
+    const pContainer = document.querySelectorAll('.project-container');
 
     // Css class to highlight selected project
     if (pContainer) {
-      pContainer.forEach((item: any) => {
+      pContainer.forEach((item) => {
         item.addEventListener('click', () => {
           for (let items of pContainer) {
             items.classList.remove('selected');
@@ -119,14 +119,14 @@ export default function Projects(props: any) {
       <ul className='projects'>
         {
           projectList &&
-          projectList.map((project: any, index: any) => (
+          projectList.map((project, index) => (
             <div onClick={() => selectProject(index)} key={project.id} className="project-container">
               <li className='project'>
                 <span className='project-name'>{project.name}</span>
                 <span className='project-time'>
                   <span className="project-current">{projectCurrentTime} </span>
                   <span className="project-time-seperator">| </span>
-                  <span className="project-limit">{projectLimit}</span>
+                  <span className="project-limit">{project.limit}</span>
                 </span>
               </li>
             </div>

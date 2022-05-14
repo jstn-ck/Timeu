@@ -3,36 +3,18 @@ import { settingItems } from './settingItems';
 import React from 'react';
 import * as jetpack from 'fs-jetpack';
 import { ipcRenderer } from 'electron';
-import { FSJetpack } from "fs-jetpack/types";
 import { useState } from 'react';
 import SettingsWindow from "@/components/Settings/SettingsWindow";
 import SIcon from '@/components/Icons/SettingsIcon';
 import Connectivity from '@/components/Connectivity/Connectivity';
 
-// interface ISettingsItems {
-//   settingName: string
-//   settingFunction: string
-// }
+class SettingsMenu extends React.Component {
+  settingItems;
+  pathToUserSettings;
+  userSettingsObject;
+  defaultSetting;
 
-type SettingProps = {
-  items: Array<object>,
-}
-
-type SettingState = {
-  default: string,
-}
-
-interface ISettingsObject {
-  darkMode: boolean,
-}
-
-class SettingsMenu extends React.Component<SettingProps, SettingState> {
-  settingItems: Array<object>;
-  pathToUserSettings: string | FSJetpack | any;
-  userSettingsObject: ISettingsObject;
-  defaultSettings: ISettingsObject;
-
-  constructor(props: SettingProps) {
+  constructor(props) {
     super(props);
 
     this.pathToUserSettings = "";
@@ -64,7 +46,7 @@ class SettingsMenu extends React.Component<SettingProps, SettingState> {
     ipcRenderer.send('get-settings-path', 'ping');
   }
 
-  async applySettingsOnStartup(): Promise<void> {
+  async applySettingsOnStartup() {
     const settingsObject = this.pathToUserSettings.read("user-preferences.json", "json");
 
     if (await settingsObject.darkMode === true) {
@@ -89,7 +71,7 @@ class SettingsMenu extends React.Component<SettingProps, SettingState> {
     }
   }
 
-  async readFromSettings(): Promise<void> {
+  async readFromSettings() {
     const settingsPath = this.pathToUserSettings;
     if (this.pathToUserSettings.read("user-preferences.json", "json") !== undefined) {
       this.userSettingsObject = await settingsPath.readAsync("user-preferences.json", "json");
@@ -133,7 +115,7 @@ class SettingsMenu extends React.Component<SettingProps, SettingState> {
   }
   // end Settings Functions
 
-  switchSettingFunctions(fn: string) {
+  switchSettingFunctions(fn) {
     switch (fn) {
       case "toggleDarkMode": {
         this.toggleDarkMode();
@@ -149,7 +131,7 @@ class SettingsMenu extends React.Component<SettingProps, SettingState> {
 
   render() {
     // What is the type of item? ..
-    const mappedSettingItems = this.settingItems.map((item: any, index) =>
+    const mappedSettingItems = this.settingItems.map((item, index) =>
       <li className="settings-menu-item" key={index} onClick={() => this.switchSettingFunctions(item.settingFunction)}>
         <span className="settings-menu-item-name">{item.settingName}</span>
       </li>
@@ -165,7 +147,7 @@ class SettingsMenu extends React.Component<SettingProps, SettingState> {
 }
 
 
-export default function Settings(): JSX.Element {
+export default function Settings() {
   const [settWin, openSettWin] = useState(false);
   const menu = document.querySelectorAll('.settings-menu')[0];
 

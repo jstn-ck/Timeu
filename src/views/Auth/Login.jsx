@@ -29,10 +29,10 @@ import { ErrorModal } from '@/components/ErrorModal/ErrorModal';
 //   }
 // };
 
-const signInWithEmailAndPassword = async (email: string, password: string) => {
+const signInWithEmailAndPassword = async (email, password) => {
   try {
     await auth.signInWithEmailAndPassword(email, password);
-  } catch (err: any) {
+  } catch (err) {
     if(err) {
       ErrorModal('Invalid email or password');
     }
@@ -49,7 +49,7 @@ export default function Login() {
   // Todo: Login with enter
   // Implement loading screen after click on login and others ?
 
-  useEffect((): any => {
+  useEffect(() => {
     if (loading) {
       return <LoadingScreen />
     }
