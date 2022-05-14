@@ -88,3 +88,12 @@ button.add-card {
   }
 }
 
+.card-progressbar {
+  position: relative;
+  width: 1%;
+  padding: 4px 0;
+  border-radius: 15px;
+  background: rgb(7,36,0);
+  background: linear-gradient(90deg, rgba(7,36,0,1) 0%, rgba(16,205,21,1) 0%, rgba(245,242,0,1) 49%, rgba(255,0,0,1) 100%);
+}
+

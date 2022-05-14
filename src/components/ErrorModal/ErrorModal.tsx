@@ -1,7 +1,7 @@
 import React from "react";
-import "./error-message.scss";
+import "./error-modal.scss";
 
-export function ErrorMessage(message: string) {
+export function ErrorModal(message: string) {
     let div = document.createElement('div');
     if(!document.querySelectorAll('.error-message')[0]) {
         div.classList.add('error-message');

@@ -13,13 +13,31 @@ moment.locale('de');
 export const CardWithTimer = (props: any) => {
     const [cardCurrent, setCardCurrent] = useState(0);
 
+    useEffect(() => {
+        // After switching project the timer gets reset
+        // So the card has to get its old value from the parent card value
+        // Set it only if the parent value changes
+        if(props.getCurrent) {
+            setCardCurrent(props.getCurrent);
+          }
+      }, [props.getCurrent])
+
+    const handleTimerActive = (setTimerActive: any) => {
+        props.handleTimerActive(setTimerActive, props.id);
+      }
+
     // Get Time gets the current time in hours from child Timer component
     const getTime = (timeInHours: any) => {
       setCardCurrent(timeInHours);
       // Card component gives current time with id to parent Cards component
-      props.getCurrentFromCard(cardCurrent, props.id);
-    }
+      props.getCurrentFromCard(timeInHours, props.id);
 
+      // Reset current time of a card to 0 if timer is 0
+      if (timeInHours == 0) {
+          props.getCurrentFromCard(0, props.id);
+          setCardCurrent(0);
+        }
+    }
 
     // Cards get filtered based on class to prevent timer reset
     return (
@@ -33,7 +51,9 @@ export const CardWithTimer = (props: any) => {
         <span className="card-current">{cardCurrent}h</span>
         <span className="card-limit">{props.limit}</span>
 
-        <Timer getCardId={props.getCardId} getTimeFromTimer={getTime} />
+        <Timer getCardId={props.getCardId} getTimeFromTimer={getTime} timerActive={props.timerActive}
+          handleTimerActive={handleTimerActive} cardLimit={props.limit}
+        />
       </div>
     )
 }
@@ -52,22 +72,55 @@ export function Cards() {
 
     if(selectedProject) {
       console.log(selectedProject);
-      console.log(cardList.length);
-      if (cardList.length > 0) {
-
-        }
     }
+
+    useEffect(() => {
+      sumCardCurrentTimes();
+    })
+
+    function sumCardCurrentTimes() {
+        if(selectedProject) {
+          if (cardList.length > 0) {
+              cardList.map((card: any) => {
+                  if(selectedProject == card.projectId) {
+                    console.log('TODO SUM');
+                  }
+                })
+            }
+        }
+      }
 
     // Gets values from child Card and updates the current time of the selected Card
     function updateCardCurrent(selectedCardCurrent: any, selectedCardId: any) {
         if(cardList) {
             cardList.map((card: any) => {
                 if(card.id == selectedCardId) {
-                    card.current = selectedCardCurrent;
-                    console.log(cardList);
+                  if(selectedCardCurrent > 0) {
+                      card.current = selectedCardCurrent;
+                    } else if (selectedCardCurrent == 0) {
+                        card.current = 0;
+                      }
                   }
               })
           }
+      }
+
+    function handleTimerActive(setTimerActive: any, selectedCardId: any) {
+      if(cardList) {
+          if(setTimerActive == true) {
+              cardList.map((card: any) => {
+                  if(card.id == selectedCardId) {
+                      card.timerActive = true;
+                    }
+                })
+            } else if(setTimerActive == false) {
+                cardList.map((card: any) => {
+                    if(card.id == selectedCardId) {
+                        card.timerActive = false;
+                      }
+                  })
+              }
+        }
       }
 
     // Add, add-card button to titlebar (for fixed positioning)
@@ -106,6 +159,7 @@ export function Cards() {
             desc: cardDesc,
             category: selectedCategory,
             id: generateUid(),
+            timerActive: false,
             createdAt: moment().format('l, LT')
         }]
 
@@ -157,7 +211,7 @@ export function Cards() {
                         </select>
                         <h4>Enter a Card time limit in hours (no limit if empty)</h4>
                         <input
-                            type="text"
+                            type="number"
                             className="input"
                             value={cardLimit}
                             onChange={(e) => setCardLimit(parseInt(e.target.value))}
@@ -196,6 +250,9 @@ export function Cards() {
                                     getCardId={card.id}
                                     selectedCategory={filterCards}
                                     getCurrentFromCard={updateCardCurrent}
+                                    getCurrent={card.current}
+                                    timerActive={card.timerActive}
+                                    handleTimerActive={handleTimerActive}
                                     />
                                 )
                               }

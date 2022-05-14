@@ -4,7 +4,7 @@ import { Link, useHistory } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 // import { signInWithGoogle } from './Login';
 import "./login.scss";
-import { ErrorMessage } from '@/components/ErrorMessage/ErrorMessage';
+import { ErrorModal } from '@/components/ErrorModal/ErrorModal';
 
 const registerWithEmailAndPassword = async (email: string, password: string) => {
   try {
@@ -17,7 +17,7 @@ const registerWithEmailAndPassword = async (email: string, password: string) => 
     });
   } catch (err: any) {
     if(err) {
-      ErrorMessage('User exists already');
+      ErrorModal('User exists already');
     }
   }
 };

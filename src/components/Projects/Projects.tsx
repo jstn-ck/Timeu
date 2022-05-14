@@ -80,7 +80,6 @@ export default function Projects(props: any) {
 
   // Context provider, cards component provides projects with sum of cards, useEffect for projects
   function sumCardCurrentTimes() {
-      console.log('efwefw');
       return 1;
     }
 

@@ -5,7 +5,7 @@ import { Link, useHistory } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import "./login.scss";
 import { LoadingScreen } from '@/components/LoadingScreen/LoadingScreen';
-import { ErrorMessage } from '@/components/ErrorMessage/ErrorMessage';
+import { ErrorModal } from '@/components/ErrorModal/ErrorModal';
 
 // const googleProvider = new firebase.auth.GoogleAuthProvider();
 
@@ -34,7 +34,7 @@ const signInWithEmailAndPassword = async (email: string, password: string) => {
     await auth.signInWithEmailAndPassword(email, password);
   } catch (err: any) {
     if(err) {
-      ErrorMessage('Invalid email or password'); 
+      ErrorModal('Invalid email or password');
     }
   }
 };
