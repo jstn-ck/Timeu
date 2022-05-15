@@ -7,10 +7,12 @@ import { generateUid } from '@/helpers/uid';
 import moment from "moment-with-locales-es6";
 import FIcon from '@/components/Icons/FilterIcon';
 import Timer from '@/components/Timer/Timer';
+import { db, auth } from '@/firebase/firebase';
+import { useAuthState } from "react-firebase-hooks/auth";
+
 // Set momentjs to get german format
 moment.locale('de');
 
-// Creates the html structure for a Card with a timer
 export const CardWithTimer = (props) => {
     const [cardCurrent, setCardCurrent] = useState(0);
 
@@ -21,10 +23,9 @@ export const CardWithTimer = (props) => {
         if(props.getCurrent) {
             setCardCurrent(props.getCurrent);
           }
-      }, [props.getCurrent])
+      })
 
     const handleTimerActive = (setTimerActive) => {
-      console.log('woop');
         props.handleTimerActive(setTimerActive, props.id);
       }
 
@@ -61,6 +62,7 @@ export const CardWithTimer = (props) => {
 }
 
 export function Cards() {
+    const [user, loading] = useAuthState(auth);
     const [cardList, addToCardList] = useState([]);
     // Get values from contextprovider (from project)
     const { selectedProject } = useContext(SelectedProjectContext);
@@ -76,35 +78,77 @@ export function Cards() {
       console.log(selectedProject);
     }
 
+  async function getCardsFromDb() {
+    const docRef = db.collection("users").doc(user?.uid);
+    docRef.get().then((doc) => {
+      if (doc.exists) {
+          console.log("Document data:", doc.data());
+          if (doc.data().cardList && doc.data().cardList.length > 0) {
+            addToCardList(doc.data().cardList);
+          }
+      } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+      }
+    }).catch((error) => {
+        console.log("Error getting document:", error);
+    });
+  }
+
+  async function addCardListToDb() {
+    try {
+      const userRef = db.collection("users");
+      const query = userRef.doc(user?.uid)
+
+      if(query != undefined && cardList.length > 0) {
+        await query.update({cardList});
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  }
+    useEffect(() => {
+      addCardListToDb();
+    }, [cardList])
+
+    useEffect(() => {
+      getCardsFromDb();
+    }, [user])
+
     useEffect(() => {
       sumCardCurrentTimes();
-    })
+    }, [selectedProject])
 
     function sumCardCurrentTimes() {
         if(selectedProject) {
           if (cardList.length > 0) {
             let sumCurrents = 0;
+            let cardProjectId = "";
               cardList.map((card) => {
                   if(selectedProject == card.projectId) {
                     // Convert card current from string to float and add with sumCurrents
                     // toFixed return given digits after decimal point
                     sumCurrents = +(sumCurrents + parseFloat(card.current)).toFixed(12);
+                    cardProjectId = card.projectId;
                   }
                 })
-            setSumCardsCurrent(sumCurrents);
+            setSumCardsCurrent({sumCurrents, cardProjectId});
             }
         }
       }
 
     // Gets values from child Card and updates the current time of the selected Card
     function updateCardCurrent(selectedCardCurrent, selectedCardId) {
+      sumCardCurrentTimes();
         if(cardList) {
             cardList.map((card) => {
                 if(card.id == selectedCardId) {
                   if(selectedCardCurrent > 0) {
                       card.current = selectedCardCurrent;
+                      addCardListToDb();
                     } else if (selectedCardCurrent == 0) {
                         card.current = 0;
+                        addCardListToDb();
                       }
                   }
               })
@@ -117,12 +161,14 @@ export function Cards() {
               cardList.map((card) => {
                   if(card.id == selectedCardId) {
                       card.timerActive = true;
+                      addCardListToDb();
                     }
                 })
             } else if(setTimerActive == false) {
                 cardList.map((card) => {
                     if(card.id == selectedCardId) {
                         card.timerActive = false;
+                        addCardListToDb();
                       }
                   })
               }

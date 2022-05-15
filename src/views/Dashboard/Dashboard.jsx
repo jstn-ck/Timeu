@@ -17,7 +17,7 @@ function Dashboard() {
   const history = useHistory();
 
   const [selectedProject, setSelectedProject] = useState("");
-  const [sumCardsCurrent, setSumCardsCurrent] = useState(0);
+  const [sumCardsCurrent, setSumCardsCurrent] = useState({});
 
   useEffect(() => {
     if (loading) {

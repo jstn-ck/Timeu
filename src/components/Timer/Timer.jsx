@@ -4,13 +4,12 @@ import "./timer.scss";
 function Timer(props) {
   const [timer, setTimer] = useState(0);
   const [isActive, setIsActive] = useState(false);
-  const [isPaused, setIsPaused] = useState(true);
-  const progressBarWidthRef = useRef(0);
+  const progressBarWidthRef = useRef(null);
+  const [progressBarWidth, setProgressBarWidth] = useState('');
   // Use Ref does not cause re render after every update, is needed because timer is already re rendering component
   const countRef = useRef(null);
 
   useEffect(() => {
-    console.log(props.timerActive)
       startTimerIfActive()
     }, [props.timerActive])
 
@@ -39,17 +38,16 @@ function Timer(props) {
       if (props.timerActive == false && isActive == false) {
         if (progressBar) {
           if (props.cardLimit != undefined && props.cardLimit != 0) {
-            console.log("NO INTERVAL")
               progressBar.style.width = calculateProgPxPerSecond() + 'px';
             }
           }
         } else if (props.timerActive == true || isActive == true) {
           if (progressBar) {
             if (props.cardLimit != undefined && props.cardLimit != 0) {
-              console.log('INTERVAL');
-                progressBarWidthRef.current = setInterval(() => {
-                  progressBar.style.width = calculateProgPxPerSecond() + 'px';
-                  }, 1000)
+                // setProgressBarWidth(calculateProgPxPerSecond() + 'px');
+                // progressBarWidthRef.current = setInterval(() => {
+                //   progressBar.style.width = progressBarWidth;
+                //  }, 1000)
               }
             }
           }
@@ -59,38 +57,34 @@ function Timer(props) {
       if(props.timerActive == true) {
         // get time that timer was active and add to new timer
           setIsActive(true)
-          setIsPaused(false)
-          countRef.current = setInterval(() => {
-            setTimer((timer) => timer + 10)
-          }, 1000)
+          calculateProgress();
+          // countRef.current = setInterval(() => {
+          //   setTimer((timer) => timer + 10)
+          // }, 1000)
+        } else if (props.timerActive == false) {
+          clearInterval(progressBarWidthRef.current);
         }
     }
 
   const handleStart = () => {
     if(props.timerActive == false) {
-        console.log('timer to tru')
         props.handleTimerActive(true);
         setIsActive(true);
-        setIsPaused(false);
       }
-
-    calculateProgress();
 
     if (!isActive) {
       countRef.current = setInterval(() => {
         setTimer((timer) => timer + 10)
       }, 1000)
+
+      calculateProgress();
     }
   }
 
   const handlePause = () => {
-    console.log(props.timerActive)
-        props.handleTimerActive(false);
-        console.log('SET TIMER FALSE')
-
-    clearInterval(countRef.current);
+    props.handleTimerActive(false);
     clearInterval(progressBarWidthRef.current);
-    setIsPaused(true);
+    clearInterval(countRef.current);
     setIsActive(false);
   }
 
@@ -98,7 +92,6 @@ function Timer(props) {
     clearInterval(countRef.current);
     clearInterval(progressBarWidthRef.current);
     setIsActive(false);
-    setIsPaused(true);
     setTimer(0);
     props.getTimeFromTimer(0);
   }
