@@ -6,7 +6,6 @@ import { ipcRenderer } from 'electron';
 import { useState } from 'react';
 import SettingsWindow from "@/components/Settings/SettingsWindow";
 import SIcon from '@/components/Icons/SettingsIcon';
-import Connectivity from '@/components/Connectivity/Connectivity';
 
 class SettingsMenu extends React.Component {
   settingItems;
@@ -36,9 +35,7 @@ class SettingsMenu extends React.Component {
   }
 
   initIpc() {
-    // Rewrite because of possible memory leak
     ipcRenderer.on("response", (event, value) => {
-      // console.log(`Renderer received ${value}.`);
       this.pathToUserSettings = jetpack.cwd(value);
       this.readFromSettings();
     })
@@ -121,16 +118,11 @@ class SettingsMenu extends React.Component {
         this.toggleDarkMode();
         break;
       }
-      case "testfn": {
-        console.log('testfn');
-        break;
-      }
     }
   }
 
 
   render() {
-    // What is the type of item? ..
     const mappedSettingItems = this.settingItems.map((item, index) =>
       <li className="settings-menu-item" key={index} onClick={() => this.switchSettingFunctions(item.settingFunction)}>
         <span className="settings-menu-item-name">{item.settingName}</span>
@@ -139,7 +131,6 @@ class SettingsMenu extends React.Component {
 
     return (
       <div className="settings-menu">
-        {/* Toggle button looks like small dot scaling in */}
         <ul className="settings-list">{mappedSettingItems}</ul>
       </div>
     )
@@ -173,7 +164,6 @@ export default function Settings() {
         <SettingsWindow onClose={() => { openSettWin(false); } }>
         <SettingsMenu
             items={settingItems} />
-        <Connectivity />
         </SettingsWindow>
       </div>
     )

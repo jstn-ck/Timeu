@@ -5,7 +5,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { generateUid } from '@/helpers/uid';
 // Moment JS for getting createdAt date/time
 import moment from "moment-with-locales-es6";
-//moment().format('MMMM Do YYYY, h:mm:ss a');
 import { SelectedProjectContext } from '@/views/Dashboard/Dashboard';
 import { SumCardsCurrentTimesContext } from '@/views/Dashboard/Dashboard';
 import { db } from '@/firebase/firebase';
@@ -23,14 +22,14 @@ export const Project = (props) => {
   })
 
   return (
-      <li className='project'>
-        <span className='project-name'>{props.name}</span>
-        <span className='project-time'>
-          <span className="project-current">{projectCurrent}h</span>
-          <span className="project-time-seperator"> | </span>
-          <span className="project-limit">{props.limit}h</span>
-        </span>
-      </li>
+    <li className='project'>
+      <span className='project-name'>{props.name}</span>
+      <span className='project-time'>
+        <span className="project-current">{projectCurrent}h</span>
+        <span className="project-time-seperator"> | </span>
+        <span className="project-limit">{props.limit}h</span>
+      </span>
+    </li>
   )
 }
 
@@ -47,6 +46,7 @@ export default function Projects(props) {
     if(projectList.length >= 1) {
       setSelectedProject(projectList[projectList.length - 1].id);
       const pContainer = document.querySelectorAll('.project-container');
+
       if(pContainer[pContainer.length - 1]) {
           pContainer[pContainer.length - 1].classList.add('selected');
           if(pContainer[pContainer.length - 2]) {
@@ -58,14 +58,14 @@ export default function Projects(props) {
 
   async function getProjectListFromDb() {
     const docRef = db.collection("users").doc(user?.uid);
+
     docRef.get().then((doc) => {
       if (doc.exists) {
-          console.log("Document data:", doc.data());
         if(doc.data().projectList && doc.data().projectList.length > 0) {
           addToProjectList(doc.data().projectList);
         }
       } else {
-          // doc.data() will be undefined in this case
+          // doc.data() will be undefined
           console.log("No such document!");
       }
     }).catch((error) => {
@@ -85,7 +85,7 @@ export default function Projects(props) {
       console.error(err);
     }
   }
-
+  // Each useEffect depends on given callback(re renders if callback value changes)
   useEffect(() => {
     getProjectListFromDb();
   }, [user])
@@ -134,6 +134,7 @@ export default function Projects(props) {
   }
 
   function createProject() {
+    // Define a project object
     const projectItem = [{
       name: projectName,
       limit: projectLimit,
@@ -142,15 +143,16 @@ export default function Projects(props) {
       createdAt: moment().format('MM.Do.YY, h:mm')
     }]
 
+    // Add project object to projectList state if name is not empty
     if (projectName !== "") {
       const newProject = projectList.concat(projectItem);
+
       addToProjectList(newProject);
       closeModal();
     } else {
       alert("Project name cant be empty");
     }
   }
-
 
   function selectProject(i) {
     setSelectedProject(projectList[i].id);
@@ -176,7 +178,6 @@ export default function Projects(props) {
         <button onClick={openCreateNewProjectModal} className='add-project'><span></span></button>
       </div>
       <div className={`modal new-project-modal ${modal ? 'open' : ''}`}>
-        {/* modal content for fade-in scale-in animation to work */}
         <div className="modal-content">
           <div className="input-container">
             <h2>Create new Project</h2>

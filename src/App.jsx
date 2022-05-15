@@ -7,6 +7,7 @@ import Dashboard from '@/views/Dashboard/Dashboard';
 import Register from '@/views/Auth/Register';
 import Reset from '@/views/Auth/Reset';
 
+// Main view components which will render first at Dom init
 ReactDOM.render(
   <Router>
     <Switch>

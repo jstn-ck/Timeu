@@ -3,31 +3,9 @@ import firebase from 'firebase';
 import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
-import "./login.scss";
+import "./auth.scss";
 import { LoadingScreen } from '@/components/LoadingScreen/LoadingScreen';
 import { ErrorModal } from '@/components/ErrorModal/ErrorModal';
-
-// const googleProvider = new firebase.auth.GoogleAuthProvider();
-
-// const signInWithGoogle = async () => {
-//   try {
-//     const res = await auth.signInWithPopup(googleProvider);
-//     const user = res.user;
-//     const query = await db
-//       .collection("users")
-//       .where("uid", "==", user!.uid)
-//       .get();
-//     if (query.docs.length === 0) {
-//       await db.collection("users").add({
-//         uid: user!.uid,
-//         authProvider: "google",
-//         email: user!.email,
-//       });
-//     }
-//   } catch (err: any) {
-//     console.error(err);
-//   }
-// };
 
 const signInWithEmailAndPassword = async (email, password) => {
   try {
@@ -45,9 +23,6 @@ export default function Login() {
   const [user, loading] = useAuthState(auth);
   const [initializing, setInitializing] = useState(true);
   const history = useHistory();
-
-  // Todo: Login with enter
-  // Implement loading screen after click on login and others ?
 
   useEffect(() => {
     if (loading) {
@@ -92,11 +67,6 @@ export default function Login() {
         >
           Login
         </button>
-
-        {/* <button className="btn login google" onClick={signInWithGoogle}>
-          Login with Google
-        </button> */}
-
         <div className='forgot-password'>
           <Link to="/reset">Forgot Password</Link>
         </div>
@@ -111,6 +81,5 @@ export default function Login() {
 export {
   auth,
   db,
-  //signInWithGoogle,
   signInWithEmailAndPassword,
 };

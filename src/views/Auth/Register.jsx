@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 // import { signInWithGoogle } from './Login';
-import "./login.scss";
+import "./auth.scss";
 import { ErrorModal } from '@/components/ErrorModal/ErrorModal';
 
 const registerWithEmailAndPassword = async (email, password) => {

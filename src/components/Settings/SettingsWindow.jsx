@@ -1,7 +1,5 @@
-import React from "react";
 import {Component} from "react";
 import ReactDOM from "react-dom";
-import { useHistory } from "react-router";
 import { auth, db } from "@/firebase/firebase";
 
 export default class SettingsWindow extends Component {
@@ -35,7 +33,7 @@ export default class SettingsWindow extends Component {
   }
 
   render() {
-    // !! this.props.children -> append tags in component
+    // this.props.children -> append children in component
     return ReactDOM.createPortal(this.props.children, this.settContainer);
   }
 }

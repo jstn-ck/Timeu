@@ -1,6 +1,7 @@
-import { initializeApp } from 'firebase/app';
 import firebase from 'firebase';
 
+
+// Init firebase with its config values to use in components
 const firebaseConfig = {
   apiKey: "AIzaSyCrfpDgwgyytjZgmumksezryZk9dOl8xqY",
   authDomain: "timeu-b364a.firebaseapp.com",
