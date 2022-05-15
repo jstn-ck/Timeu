@@ -131,7 +131,7 @@ class SettingsMenu extends React.Component {
 
     return (
       <div className="settings-menu">
-        <ul className="settings-list">{mappedSettingItems}</ul>
+        <ul className="settings-list"></ul>
       </div>
     )
   }
@@ -146,11 +146,9 @@ export default function Settings() {
     try {
       openSettWin(true);
       if(menu) {
-        // Casual checks if element even exists (good practice to not get undefined errors)
         document.querySelectorAll('.settings-menu')[0].classList.toggle('open');
       }
     } catch (err) {
-      // Rename from console.log to .error für Doku (error handling)
       console.error(err);
     }
   }

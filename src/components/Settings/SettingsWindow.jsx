@@ -1,6 +1,7 @@
 import {Component} from "react";
 import ReactDOM from "react-dom";
 import { auth, db } from "@/firebase/firebase";
+import "./settings.scss";
 
 export default class SettingsWindow extends Component {
   constructor(props) {
@@ -17,6 +18,7 @@ export default class SettingsWindow extends Component {
 
     if (externalWindow) {
       this.logoutContainer.classList.add('logout');
+      this.settContainer.classList.add("settings-container");
       let logoutText = document.createTextNode('Logout')
       this.logoutContainer.appendChild(logoutText);
       this.settContainer.appendChild(this.logoutContainer);      

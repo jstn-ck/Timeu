@@ -56,12 +56,6 @@ function Register() {
         <button className="btn register" onClick={register}>
           Register
         </button>
-        {/* <button
-          className="btn login google"
-          onClick={signInWithGoogle}
-        >
-          Register with Google
-        </button> */}
         <div className='login-container'>
           Already have an account? <Link to="/">Login</Link>
         </div>

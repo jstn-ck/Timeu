@@ -13,7 +13,6 @@
   min-height: 300px;
   min-width: 260px;
   max-width: 260px;
-  max-height: 300px;
   background-color: var(--bg-card);
   color: var(--black);
   margin: 40px 40px 0 0;
@@ -27,11 +26,58 @@
   }
 
   &.Feature {
-    color: green;
+    .card-category {
+      color: var(--blue);
+    }
   }
 
+  &.All {
+    .card-category {
+      color: var(--green);
+    }
+  }
+
+  &.Task {
+    .card-category {
+      color: var(--orange);
+    }
+  }
+
+  &.Bug {
+    .card-category {
+      color: var(--red-2);
+    }
+  }
+
+  .card-name {
+    font-size: 17px;
+  }
+
+  .card-desc {
+    font-size: 15px;
+  }
+
+  .card-category {
+    font-size: 15px;
+    padding-bottom: 7px;
+  }
+
+  .card-times {
+    font-size: 14px;
+    align-self: center;
+    padding-top: 40px;
+    width: 100%;
+    text-align: center;
+    margin-left: -15px;
+  }
+
+  .card-current, .card-limit {
+    display: inline-block;
+    padding: 0 10px;
+  }
 
   .card-created-at {
+    color: var(--grey-3);
     align-self: end;
     padding-bottom: 1em;
   }
@@ -86,14 +132,5 @@ button.add-card {
   .filter-info {
     padding-top: 6px;
   }
-}
-
-.card-progressbar {
-  position: relative;
-  width: 1%;
-  padding: 4px 0;
-  border-radius: 15px;
-  background: rgb(7,36,0);
-  background: linear-gradient(90deg, rgba(7,36,0,1) 0%, rgba(16,205,21,1) 0%, rgba(245,242,0,1) 49%, rgba(255,0,0,1) 100%);
 }
 

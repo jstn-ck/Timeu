@@ -1,0 +1,52 @@
+.timer-progressbar {
+    position: relative;
+    width: 10%;
+    padding: 4px 0;
+    border-radius: 15px;
+    background-color: var(--green);
+    //background: rgb(7,36,0);
+    //background: linear-gradient(90deg, rgba(7,36,0,1) 0%, rgba(16,205,21,1) 0%, rgba(245,242,0,1) 49%, rgba(255,0,0,1) 100%);
+}
+
+.timer {
+    position: relative;
+    justify-self: flex-end;
+    align-self: center;
+    margin-top: auto;
+    width: 100%;
+
+    .time {
+        text-align: center;
+        font-size: 24px;
+    }
+
+    .timer-progressbar {
+        margin-bottom: 16px;
+        margin-top: 15px;
+    }
+
+    .timer-buttons {
+        text-align: center;
+
+        button {
+            display: inline-block;
+            margin: 10px 5px 0 5px;
+            padding: 5px 10px;
+            background-color: var(--white);
+            border-radius: 7px;
+            font-size: 14px;
+            transition: 0.2s ease;
+            border: 2px solid var(--white);
+
+            &:hover {
+                border: 2px solid var(--blue);
+            }
+
+            &.active {
+                background-color: var(--blue);
+                color: var(--white);
+                border: 2px solid var(--blue);
+            }
+        }
+    }
+}

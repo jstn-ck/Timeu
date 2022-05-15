@@ -51,8 +51,11 @@ export const CardWithTimer = (props) => {
         <h3 className="card-category">{props.category}</h3>
         <h2 className="card-name">{props.name}</h2>
         <p className="card-desc">{props.description}</p>
-        <span className="card-current">{cardCurrent}h</span>
-        <span className="card-limit">{props.limit}</span>
+        <div className="card-times">
+            <span className="card-current"><strong>Current:</strong> {cardCurrent}h</span>
+            <span className="seperator"> | </span>
+            <span className="card-limit"><strong>Limit:</strong> {props.limit}h</span>
+        </div>
 
         <Timer getCardId={props.getCardId} getTimeFromTimer={getTime} timerActive={props.timerActive}
           handleTimerActive={handleTimerActive} cardLimit={props.limit}

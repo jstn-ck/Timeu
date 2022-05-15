@@ -5,7 +5,7 @@ function Timer(props) {
   const [timer, setTimer] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const progressBarWidthRef = useRef(null);
-  const [progressBarWidth, setProgressBarWidth] = useState('');
+  const [progressBarWidth, setProgressBarWidth] = useState(0);
   // Use Ref does not cause re render after every update, is needed because timer is already re rendering component
   const countRef = useRef(null);
 
@@ -33,24 +33,28 @@ function Timer(props) {
     }
 
   function calculateProgress() {
-      const progressBar = document.querySelectorAll('.card-progressbar')[0];
+    const progressBar = document.querySelectorAll('.card-progressbar')[0];
 
-      if (props.timerActive == false && isActive == false) {
+    if (props.timerActive == false && isActive == false) {
+      if (progressBar) {
+        if (props.cardLimit != undefined && props.cardLimit != 0) {
+            progressBar.style.width = calculateProgPxPerSecond() + "px";
+            
+            if (progressBarWidth > 2) {
+              progressBar.classList.add("red");
+            }
+          }
+        }
+      } else if (props.timerActive == true || isActive == true) {
         if (progressBar) {
           if (props.cardLimit != undefined && props.cardLimit != 0) {
-              progressBar.style.width = calculateProgPxPerSecond() + 'px';
+              // setProgressBarWidth(calculateProgPxPerSecond() + 'px');
+              // progressBarWidthRef.current = setInterval(() => {
+              //   progressBar.style.width = progressBarWidth;
+              //  }, 1000)
             }
           }
-        } else if (props.timerActive == true || isActive == true) {
-          if (progressBar) {
-            if (props.cardLimit != undefined && props.cardLimit != 0) {
-                // setProgressBarWidth(calculateProgPxPerSecond() + 'px');
-                // progressBarWidthRef.current = setInterval(() => {
-                //   progressBar.style.width = progressBarWidth;
-                //  }, 1000)
-              }
-            }
-          }
+        }
     }
 
   const startTimerIfActive = () => {
@@ -97,15 +101,15 @@ function Timer(props) {
   }
 
   return (
-        <div className='stopwatch-card'>
-          <div className="card-progressbar"></div>
-          <p>{formatTime(timer)}</p>
-          <div className='buttons'>
-            <button disabled={isActive} onClick={handleStart}>Start</button>
-            <button onClick={() => { props.getTimeFromTimer(getTimeInHours(timer)); handlePause();}}>Pause</button>
-            <button onClick={handleReset}>Reset</button>
-          </div>
-        </div>
+    <div className='timer'>
+      <div className="timer-progressbar"></div>
+      <p className="time">{formatTime(timer)}</p>
+      <div className='timer-buttons'>
+        <button className={`${isActive ? "active" : ""}`} disabled={isActive} onClick={handleStart}>Start</button>
+        <button className={`${isActive ? "" : "active"}`} onClick={() => { props.getTimeFromTimer(getTimeInHours(timer)); handlePause();}}>Pause</button>
+        <button onClick={handleReset}>Reset</button>
+      </div>
+    </div>
   )
 }
 
