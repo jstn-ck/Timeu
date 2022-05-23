@@ -25,8 +25,7 @@ function Dashboard() {
     };
 
     if (!user) return history.replace('/');
-
-    fetchUserName();
+    
     handleSidebarResize();
   }, [user, loading]);
 
@@ -69,19 +68,6 @@ function Dashboard() {
       }
     }
   }
-
-  const fetchUserName = async () => {
-    try {
-      const query = await db
-        .collection("users")
-        .where("uid", "==", user?.uid)
-        .get();
-      const data = query.docs[0].data();
-      console.log(data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   return (
     <div className="dashboard">

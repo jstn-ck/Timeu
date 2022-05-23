@@ -13,8 +13,8 @@ moment.locale('de');
 export const Project = (props) => {
   const [projectCurrent, setProjectCurrent] = useState(0);
 
-  useEffect(()  => {
-    if(props.getProjectCurrent) {
+  useEffect(() => {
+    if (props.getProjectCurrent) {
       setProjectCurrent(props.getProjectCurrent)
     } else if (props.getProjectCurrent == 0) {
       setProjectCurrent(0);
@@ -41,19 +41,20 @@ export default function Projects(props) {
   const [projectLimit, setProjectLimit] = useState(0);
   const { setSelectedProject } = useContext(SelectedProjectContext);
   const { sumCardsCurrent } = useContext(SumCardsCurrentTimesContext);
+  const [reRenderProjects, doReRenderProjects] = useState(false);
 
   useEffect(() => {
-    if(projectList.length >= 1) {
+    if (projectList.length >= 1) {
       setSelectedProject(projectList[projectList.length - 1].id);
       const pContainer = document.querySelectorAll('.project-container');
 
-      if(pContainer[pContainer.length - 1]) {
-          pContainer[pContainer.length - 1].classList.add('selected');
-          if(pContainer[pContainer.length - 2]) {
-              pContainer[pContainer.length - 2].classList.remove('selected');
-            }
+      if (pContainer[pContainer.length - 1]) {
+        pContainer[pContainer.length - 1].classList.add('selected');
+        if (pContainer[pContainer.length - 2]) {
+          pContainer[pContainer.length - 2].classList.remove('selected');
         }
       }
+    }
   }, [projectList])
 
   async function getProjectListFromDb() {
@@ -61,15 +62,15 @@ export default function Projects(props) {
 
     docRef.get().then((doc) => {
       if (doc.exists) {
-        if(doc.data().projectList && doc.data().projectList.length > 0) {
+        if (doc.data().projectList && doc.data().projectList.length > 0) {
           addToProjectList(doc.data().projectList);
         }
       } else {
-          // doc.data() will be undefined
-          console.log("No such document!");
+        // doc.data() will be undefined
+        console.log("No such document!");
       }
     }).catch((error) => {
-        console.log("Error getting document:", error);
+      console.log("Error getting document:", error);
     });
   }
 
@@ -78,39 +79,41 @@ export default function Projects(props) {
       const userRef = db.collection("users");
       const query = userRef.doc(user?.uid)
 
-      if(query != undefined && projectList.length > 0) {
-        await query.update({projectList});
+      if (query != undefined && projectList.length > 0) {
+        await query.update({ projectList });
       }
-    } catch(err) {
+    } catch (err) {
       console.error(err);
     }
   }
+
+  useEffect(() => {
+    addProjectListToDb();
+  }, [projectList])
+
   // Each useEffect depends on given callback(re renders if callback value changes)
   useEffect(() => {
     getProjectListFromDb();
   }, [user])
 
   useEffect(() => {
-    addProjectListToDb();
-  }, [projectList])
-
-  if(sumCardsCurrent) {
-    updateProjectCurrent();
-  }
-
-  useEffect(() => {
     updateProjectCurrent();
   }, [sumCardsCurrent])
 
+  function reRenderProjectCurrent() {
+    doReRenderProjects(!reRenderProjects);
+  }
+
   function updateProjectCurrent() {
-    if(projectList.length > 0) {
-      if(sumCardsCurrent.cardProjectId != "") {
+    if (projectList.length > 0) {
+      if (sumCardsCurrent.cardProjectId != "") {
         projectList.map((project) => {
-          if(project.id == sumCardsCurrent.cardProjectId) {
-            if(sumCardsCurrent.sumCurrents > 0) {
+          if (project.id == sumCardsCurrent.cardProjectId) {
+            if (sumCardsCurrent.sumCurrents > 0) {
               project.current = sumCardsCurrent.sumCurrents;
+              reRenderProjectCurrent();
               addProjectListToDb();
-            } else if(sumCardsCurrent.sumCurrents == 0) {
+            } else if (sumCardsCurrent.sumCurrents == 0) {
               project.current = 0;
             }
           }
@@ -208,16 +211,16 @@ export default function Projects(props) {
           projectList &&
           projectList.map((project, index) => {
             return (
-            <div onClick={() => selectProject(index)} key={project.id} className="project-container">
-              <Project
-                key={project.id}
-                id={project.id}
-                name={project.name}
-                limit={project.limit}
-                createdAt={project.createdAt}
-                getProjectCurrent={project.current}
-              />
-            </div>
+              <div onClick={() => selectProject(index)} key={project.id} className="project-container">
+                <Project
+                  key={project.id}
+                  id={project.id}
+                  name={project.name}
+                  limit={project.limit}
+                  createdAt={project.createdAt}
+                  getProjectCurrent={project.current}
+                />
+              </div>
             )
           })
         }
