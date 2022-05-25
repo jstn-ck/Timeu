@@ -7,7 +7,6 @@ function Timer(props) {
   const [isTimerActive, setIsTimerActive] = useState(props.timerActive);
   const [progressBarWidth, setProgressBarWidth] = useState(0);
   // Use Ref does not cause re render after every update, is needed because timer is already re rendering component
-  const progressBarWidthRef = useRef(null);
   const countRef = useRef(null);
   // Get progressbar as dom element, individually for each card
   const pBarRef = React.createRef();
@@ -24,6 +23,10 @@ function Timer(props) {
 
   useEffect(() => {
     calculateProgress();
+    if (isActive) {
+      pBarRef.current.style.width = calculateProgPxPerSecond() + "px";
+      console.log(pBarRef.current.style.width)
+    }
   })
 
   function calculateProgPxPerSecond() {
@@ -50,15 +53,6 @@ function Timer(props) {
           pBarRef.current.style.width = calculateProgPxPerSecond() + "px";
         }
       }
-    } else if (isTimerActive == true || isActive == true) {
-      if (progressBar) {
-        if (props.cardLimit != undefined && props.cardLimit != 0) {
-          // setProgressBarWidth(calculateProgPxPerSecond() + 'px');
-          // progressBarWidthRef.current = setInterval(() => {
-          //   progressBar.style.width = progressBarWidth;
-          //  }, 1000)
-        }
-      }
     }
   }
 
@@ -69,13 +63,11 @@ function Timer(props) {
       calculateProgress();
 
     } else if (await isTimerActive == false) {
-      clearInterval(progressBarWidthRef.current);
+      clearInterval(countRef.current);
     }
   }
 
   const handleStart = () => {
-    calculateProgress();
-
     if (isTimerActive == false) {
       props.handleTimerActive(true);
       setIsActive(true);
@@ -89,7 +81,6 @@ function Timer(props) {
   }
 
   const handlePause = () => {
-    clearInterval(progressBarWidthRef.current);
     clearInterval(countRef.current);
     setIsActive(false);
     props.handleTimerActive(false);
@@ -98,7 +89,6 @@ function Timer(props) {
 
   const handleReset = () => {
     clearInterval(countRef.current);
-    clearInterval(progressBarWidthRef.current);
     setIsActive(false);
     setTimer(0);
     props.getTimeFromTimer(0);

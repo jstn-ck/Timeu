@@ -147,7 +147,6 @@ export function Cards() {
 
   // Gets values from child Card and updates the current time of the selected Card
   function updateCardCurrent(selectedCardCurrent, selectedCardId) {
-    sumCardCurrentTimes();
     if (cardList) {
       cardList.map((card) => {
         if (card.id == selectedCardId) {
@@ -160,6 +159,7 @@ export function Cards() {
           }
         }
       })
+      sumCardCurrentTimes();
     }
   }
 

@@ -11,11 +11,12 @@ import { db } from '@/firebase/firebase';
 moment.locale('de');
 
 export const Project = (props) => {
-  const [projectCurrent, setProjectCurrent] = useState(0);
+  const [projectCurrent, setProjectCurrent] = useState(props.getProjectCurrent);
 
   useEffect(() => {
-    if (props.getProjectCurrent) {
-      setProjectCurrent(props.getProjectCurrent)
+    if (props.getProjectCurrent !== projectCurrent) {
+      console.log('updated')
+      setProjectCurrent(props.getProjectCurrent);
     } else if (props.getProjectCurrent == 0) {
       setProjectCurrent(0);
     }
@@ -87,11 +88,11 @@ export default function Projects(props) {
     }
   }
 
+  // Each useEffect depends on given callback(re renders if callback value changes)
   useEffect(() => {
     addProjectListToDb();
   }, [projectList])
 
-  // Each useEffect depends on given callback(re renders if callback value changes)
   useEffect(() => {
     getProjectListFromDb();
   }, [user])
@@ -102,7 +103,10 @@ export default function Projects(props) {
 
   function reRenderProjectCurrent() {
     doReRenderProjects(!reRenderProjects);
+    addToProjectList(projectList);
   }
+
+  //Useful: findIndex((i) => i.id === id);
 
   function updateProjectCurrent() {
     if (projectList.length > 0) {
@@ -111,6 +115,7 @@ export default function Projects(props) {
           if (project.id == sumCardsCurrent.cardProjectId) {
             if (sumCardsCurrent.sumCurrents > 0) {
               project.current = sumCardsCurrent.sumCurrents;
+              console.log(sumCardsCurrent.sumCurrents);
               reRenderProjectCurrent();
               addProjectListToDb();
             } else if (sumCardsCurrent.sumCurrents == 0) {
@@ -212,6 +217,7 @@ export default function Projects(props) {
           projectList.map((project, index) => {
             return (
               <div onClick={() => selectProject(index)} key={project.id} className="project-container">
+                {console.log(project.current)}
                 <Project
                   key={project.id}
                   id={project.id}
