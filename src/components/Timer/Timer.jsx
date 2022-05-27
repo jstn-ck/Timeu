@@ -5,7 +5,6 @@ function Timer(props) {
   const [timer, setTimer] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [isTimerActive, setIsTimerActive] = useState(props.timerActive);
-  const [progressBarWidth, setProgressBarWidth] = useState(0);
   // Use Ref does not cause re render after every update, is needed because timer is already re rendering component
   const countRef = useRef(null);
   // Get progressbar as dom element, individually for each card
@@ -25,7 +24,12 @@ function Timer(props) {
     calculateProgress();
     if (isActive) {
       pBarRef.current.style.width = calculateProgPxPerSecond() + "px";
-      console.log(pBarRef.current.style.width)
+      console.log(parseFloat(pBarRef.current.style.width))
+    }
+
+    // Dont let progressbar go further than max width
+    if (parseFloat(pBarRef.current.style.width) >= 225) {
+      pBarRef.current.style.width = "225px";
     }
   })
 
@@ -75,7 +79,7 @@ function Timer(props) {
 
     if (!isActive) {
       countRef.current = setInterval(() => {
-        setTimer((timer) => timer + 30)
+        setTimer((timer) => timer + 80)
       }, 1000)
     }
   }

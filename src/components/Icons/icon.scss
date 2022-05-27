@@ -8,7 +8,7 @@ svg {
         display: block;
 
         &:hover {
-          fill: var(--grey-2);
+            fill: var(--grey-2);
         }
     }
 
@@ -18,5 +18,19 @@ svg {
         max-width: 15px;
         display: inline-block;
         top: 3px;
+    }
+
+    &.icon-edit {
+        fill: var(--grey-3);
+        position: relative;
+        max-width: 18px;
+        display: block;
+    }
+
+    &.icon-trash {
+        fill: var(--grey-3);
+        position: relative;
+        max-width: 16px;
+        display: block;
     }
 }

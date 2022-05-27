@@ -8,6 +8,7 @@ import moment from "moment-with-locales-es6";
 import { SelectedProjectContext } from '@/views/Dashboard/Dashboard';
 import { SumCardsCurrentTimesContext } from '@/views/Dashboard/Dashboard';
 import { db } from '@/firebase/firebase';
+import { disablePointer } from '@/helpers/disablePointer';
 moment.locale('de');
 
 export const Project = (props) => {
@@ -15,7 +16,6 @@ export const Project = (props) => {
 
   useEffect(() => {
     if (props.getProjectCurrent !== projectCurrent) {
-      console.log('updated')
       setProjectCurrent(props.getProjectCurrent);
     } else if (props.getProjectCurrent == 0) {
       setProjectCurrent(0);
@@ -130,6 +130,7 @@ export default function Projects(props) {
   function openCreateNewProjectModal() {
     try {
       openModal(true);
+      disablePointer(true);
     } catch (e) {
       console.error(e);
     }
@@ -138,6 +139,7 @@ export default function Projects(props) {
   function closeModal() {
     if (openModal) {
       openModal(false);
+      disablePointer(false);
     }
   }
 
@@ -165,18 +167,10 @@ export default function Projects(props) {
   function selectProject(i) {
     setSelectedProject(projectList[i].id);
     const pContainer = document.querySelectorAll('.project-container');
-
-    // Css class to highlight selected project
-    if (pContainer) {
-      pContainer.forEach((item) => {
-        item.addEventListener('click', () => {
-          for (let items of pContainer) {
-            items.classList.remove('selected');
-          }
-          item.classList.add('selected');
-        })
-      })
-    }
+    pContainer.forEach((item) => {
+      item.classList.remove('selected');
+    })
+    pContainer[i].classList.add("selected")
   }
 
   return (

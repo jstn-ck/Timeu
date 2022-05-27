@@ -21,7 +21,22 @@
   transition: opacity .2s ease;
   display: none;
 
-  &.All,&.Task,&.Bug,&.Feature {
+  &:hover {
+    .edit-container {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .delete-container {
+      opacity: 1;
+      pointer-events: all;
+    }
+  }
+
+  &.All,
+  &.Task,
+  &.Bug,
+  &.Feature {
     display: flex;
   }
 
@@ -71,7 +86,8 @@
     margin-left: -15px;
   }
 
-  .card-current, .card-limit {
+  .card-current,
+  .card-limit {
     display: inline-block;
     padding: 0 10px;
   }
@@ -80,31 +96,34 @@
     color: var(--grey-3);
     align-self: end;
     padding-bottom: 1em;
+    font-size: 15px;
+    margin-left: auto;
   }
 }
 
 button.add-card {
-    position: absolute;
-    top: 7px;
-    left: 10px;
-    padding: 10px 15px;
-    border-radius: 5px;
-    background-color: darken(#4F90FF, 5);
-    color: var(--white);
-    z-index: 999;
-    font-weight: 600;
-    transition: 0.2s ease;
+  position: absolute;
+  top: 7px;
+  left: 10px;
+  padding: 10px 15px;
+  border-radius: 5px;
+  background-color: darken(#4F90FF, 5);
+  color: var(--white);
+  z-index: 999;
+  font-weight: 600;
+  transition: 0.2s ease;
 
-    &.disabled {
-      background-color: var(--grey);
-    }
+  &.disabled {
+    background-color: var(--grey);
+  }
 }
 
 .modal {
   &.new-card-modal {
     max-height: 450px;
 
-    h2,h3 {
+    h2,
+    h3 {
       margin-top: 12px;
     }
   }
@@ -116,7 +135,6 @@ button.add-card {
   background-color: var(--color-background);
   width: calc(100% - 240px);
   box-shadow: -44px -46px 0px 51px var(--color-background);
-
 
   select {
     background-color: transparent;
@@ -134,3 +152,28 @@ button.add-card {
   }
 }
 
+.card-control {
+  display: flex;
+  flex-direction: row;
+
+  .edit-container,
+  .delete-container {
+    margin-right: 7px;
+  }
+
+  .edit-container {
+    margin-top: -16px;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.2s ease;
+  }
+
+  .delete-container {
+    margin-top: -16px;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.2s ease;
+  }
+}

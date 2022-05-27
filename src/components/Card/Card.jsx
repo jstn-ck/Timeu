@@ -6,16 +6,22 @@ import { SumCardsCurrentTimesContext } from "@/views/Dashboard/Dashboard";
 import { generateUid } from '@/helpers/uid';
 import moment from "moment-with-locales-es6";
 import FIcon from '@/components/Icons/FilterIcon';
+import EIcon from '@/components/Icons/EditIcon';
+import TIcon from '@/components/Icons/TrashIcon';
 import Timer from '@/components/Timer/Timer';
 import { db, auth } from '@/firebase/firebase';
 import { useAuthState } from "react-firebase-hooks/auth";
+import { disablePointer } from "@/helpers/disablePointer";
 
 // Set moment locale to de to get the german date/time format
 moment.locale('de');
 
 export const CardWithTimer = (props) => {
   const [cardCurrent, setCardCurrent] = useState(props.getCurrent);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
   const [getTimerActiveCard, setTimerActiveCard] = useState(props.timerActive);
+  const [editedCardDesc, setEditedCardDesc] = useState('');
 
   useEffect(() => {
     if (props.timerActive !== getTimerActiveCard) {
@@ -50,12 +56,87 @@ export const CardWithTimer = (props) => {
     }
   }
 
+  function handleDelete(id) {
+    if (openDeleteModal) {
+      props.handleDelete(id);
+      setOpenDeleteModal(false);
+      disablePointer(false);
+    }
+  }
+
+  function handleDeleteModal() {
+    if (!openDeleteModal) {
+      setOpenDeleteModal(true);
+      disablePointer(true);
+    } else if (openDeleteModal) {
+      disablePointer(false);
+      setOpenDeleteModal(false);
+    }
+  }
+
+  function handleEdit(id) {
+    if (openEditModal) {
+      const updatedItemValues = {
+        newDesc: editedCardDesc,
+      }
+
+      props.handleEdit(updatedItemValues, id);
+      setOpenEditModal(false);
+      disablePointer(false);
+    }
+  }
+
+  function handleEditModal() {
+    if (!openEditModal) {
+      setOpenEditModal(true);
+      disablePointer(true);
+    } else if (openEditModal) {
+      disablePointer(false);
+      setOpenEditModal(false);
+    }
+  }
+
   // Cards get filtered based on class to prevent timer reset
   return (
     <div key={props.id} className={`card-container
           ${props.selectedCategory == props.category ? props.category : ''}
           ${props.selectedCategory == 'All' ? props.category : ''}`}>
-      <span className="card-created-at">{props.createdAt}</span>
+      <div className="card-control">
+        <div onClick={handleEditModal} className="edit-container">
+          <EIcon />
+        </div>
+        <div className={`modal edit-card-modal ${openEditModal ? 'open' : ''}`}>
+          <div className="modal-content">
+            <h2>Edit Card</h2>
+            <h3>Enter new Card description</h3>
+            <input
+              type="text"
+              className="input"
+              maxLength={50}
+              value={editedCardDesc}
+              onChange={(e) => setEditedCardDesc(e.target.value)}
+              placeholder="Enter New Card description"
+            />
+            <div className="btn-container">
+              <button onClick={handleEditModal} className='btn-cancel'>Cancel</button>
+              <button onClick={(e) => { handleEdit(props.id) }} className='btn-create'>Save</button>
+            </div>
+          </div>
+        </div>
+        <div onClick={handleDeleteModal} className="delete-container">
+          <TIcon />
+        </div>
+        <div className={`modal delete-card-modal ${openDeleteModal ? 'open' : ''}`}>
+          <div className="modal-content">
+            <h2>Delete Card ?</h2>
+            <div className="btn-container">
+              <button onClick={handleDeleteModal} className='btn-cancel'>Cancel</button>
+              <button onClick={(e) => { handleDelete(props.id) }} className='btn-delete'>Delete</button>
+            </div>
+          </div>
+        </div>
+        <span className="card-created-at">{props.createdAt}</span>
+      </div>
       <h3 className="card-category">{props.category}</h3>
       <h2 className="card-name">{props.name}</h2>
       <p className="card-desc">{props.description}</p>
@@ -95,10 +176,10 @@ export function Cards() {
         }
       } else {
         // doc.data() will be undefined in this case
-        console.log("No such document!");
+        console.log("No Cards in document DB!");
       }
     }).catch((error) => {
-      console.log("Error getting document:", error);
+      console.error("Error getting document:", error);
     });
   }
 
@@ -195,6 +276,7 @@ export function Cards() {
   function openCreateCardModal() {
     try {
       openModal(true);
+      disablePointer(true);
     } catch (e) {
       console.error(e);
     }
@@ -204,6 +286,7 @@ export function Cards() {
     if (openModal) {
       try {
         openModal(false);
+        disablePointer(false);
       } catch (e) {
         console.error(e);
       }
@@ -234,6 +317,34 @@ export function Cards() {
     } else {
       alert("Card name cant be empty");
     }
+  }
+
+  function deleteCard(id) {
+    try {
+      const updatedCardList = cardList.filter((item) => item.id !== id);
+      addToCardList(updatedCardList);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  function editCard(editedCard, id) {
+    //...item update here
+    console.log(editedCard);
+    const newList = cardList.map((item) => {
+      if (item.id === id) {
+        const updatedItem = {
+          ...item,
+          desc: editedCard.newDesc,
+        };
+
+        return updatedItem;
+      }
+
+      return item;
+    });
+
+    addToCardList(newList);
   }
 
   return (
@@ -317,6 +428,8 @@ export function Cards() {
                   getCurrent={card.current}
                   timerActive={card.timerActive}
                   handleTimerActive={handleTimerActive}
+                  handleDelete={deleteCard}
+                  handleEdit={editCard}
                 />
               )
             }

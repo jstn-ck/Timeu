@@ -37,14 +37,16 @@
         cursor: pointer;
 
         &:hover {
-           border: 1px solid var(--white);
+            border: 1px solid var(--white);
 
-           &::before, &::after {
-               background-color: var(--white);
-           }
+            &::before,
+            &::after {
+                background-color: var(--white);
+            }
         }
 
-        &::before,&::after {
+        &::before,
+        &::after {
             content: "";
             position: absolute;
             width: 8px;
@@ -139,6 +141,11 @@
     max-height: 300px;
     visibility: hidden;
     transform: translate(-50%, -50%);
+    pointer-events: all;
+
+    &.delete-card-modal {
+        max-height: 150px;
+    }
 
     .modal-content {
         z-index: 99999999;
@@ -153,7 +160,7 @@
         transform: scale(.7);
         transition: .3s;
         background-color: var(--color-pane-cardlist);
-        box-shadow: 0 0 0 1000px rgba(0,0,0, 0.5);
+        box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5);
     }
 
     &.open {
@@ -165,8 +172,14 @@
         }
     }
 
-    &.new-project-modal, &.new-card-modal {
-        h2,h3,h4 {
+    &.new-project-modal,
+    &.new-card-modal,
+    &.delete-card-modal,
+    &.edit-card-modal {
+
+        h2,
+        h3,
+        h4 {
             color: var(--white-2);
         }
 
@@ -212,6 +225,11 @@
 
             &.btn-create {
                 background-color: var(--blue);
+                color: var(--white);
+            }
+
+            &.btn-delete {
+                background-color: var(--red);
                 color: var(--white);
             }
         }
