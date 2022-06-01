@@ -9,10 +9,16 @@ import { SelectedProjectContext } from '@/views/Dashboard/Dashboard';
 import { SumCardsCurrentTimesContext } from '@/views/Dashboard/Dashboard';
 import { db } from '@/firebase/firebase';
 import { disablePointer } from '@/helpers/disablePointer';
+import EIcon from '@/components/Icons/EditIcon';
+import TIcon from '@/components/Icons/TrashIcon';
 moment.locale('de');
 
 export const Project = (props) => {
   const [projectCurrent, setProjectCurrent] = useState(props.getProjectCurrent);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [editedProjectName, setEditedProjectName] = useState(props.name);
+  const [editedProjectLimit, setEditedProjectLimit] = useState(props.limit);
 
   useEffect(() => {
     if (props.getProjectCurrent !== projectCurrent) {
@@ -22,13 +28,99 @@ export const Project = (props) => {
     }
   })
 
+  function handleDelete(id) {
+    if (openDeleteModal) {
+      props.handleDelete(id);
+      setOpenDeleteModal(false);
+      disablePointer(false);
+    }
+  }
+
+  function handleDeleteModal() {
+    if (!openDeleteModal) {
+      setOpenDeleteModal(true);
+      disablePointer(true);
+    } else if (openDeleteModal) {
+      disablePointer(false);
+      setOpenDeleteModal(false);
+    }
+  }
+
+  function handleEdit(id) {
+    if (openEditModal) {
+      const updatedItemValues = {
+        newName: editedProjectName,
+        newLimit: editedProjectLimit,
+      }
+
+      props.handleEdit(updatedItemValues, id);
+      setOpenEditModal(false);
+      disablePointer(false);
+    }
+  }
+
+  function handleEditModal() {
+    if (!openEditModal) {
+      setOpenEditModal(true);
+      disablePointer(true);
+    } else if (openEditModal) {
+      disablePointer(false);
+      setOpenEditModal(false);
+    }
+  }
+
   return (
     <li className='project'>
+      <div className={`modal edit-project-modal ${openEditModal ? 'open' : ''}`}>
+        <div className="modal-content">
+          <div className="input-container">
+            <h2>Edit Project</h2>
+            <input
+              type="text"
+              className="input"
+              maxLength={50}
+              value={editedProjectName}
+              onChange={(e) => setEditedProjectName(e.target.value)}
+              placeholder="Enter new Project name"
+            />
+            <h4>Enter a new Project time limit in hours</h4>
+            <input
+              type="number"
+              className="input"
+              value={editedProjectLimit}
+              onChange={(e) => setEditedProjectLimit(parseInt(e.target.value))}
+              placeholder="Project limit in h"
+            />
+          </div>
+          <div className="btn-container">
+            <button onClick={handleEditModal} className='btn-cancel'>Cancel</button>
+            <button onClick={(e) => { handleEdit(props.id) }} className='btn-create'>Save</button>
+          </div>
+        </div>
+      </div>
+      <div className={`modal delete-project-modal ${openDeleteModal ? 'open' : ''}`}>
+        <div className="modal-content">
+          <h2>Delete Project ?</h2>
+          <div className="btn-container">
+            <button onClick={handleDeleteModal} className='btn-cancel'>Cancel</button>
+            <button onClick={(e) => { handleDelete(props.id) }} className='btn-delete'>Delete</button>
+          </div>
+        </div>
+      </div>
       <span className='project-name'>{props.name}</span>
       <span className='project-time'>
         <span className="project-current">{projectCurrent}h</span>
         <span className="project-time-seperator"> | </span>
         <span className="project-limit">{props.limit}h</span>
+      </span>
+      <span className='project-controls'>
+        <span onClick={handleEditModal} className="edit-container">
+          <EIcon />
+        </span>
+        <span className="project-control-seperator"> | </span>
+        <span onClick={handleDeleteModal} className="delete-container">
+          <TIcon />
+        </span>
       </span>
     </li>
   )
@@ -68,7 +160,7 @@ export default function Projects(props) {
         }
       } else {
         // doc.data() will be undefined
-        console.log("No such document!");
+        console.log("No Projects in document DB!");
       }
     }).catch((error) => {
       console.log("Error getting document:", error);
@@ -115,7 +207,6 @@ export default function Projects(props) {
           if (project.id == sumCardsCurrent.cardProjectId) {
             if (sumCardsCurrent.sumCurrents > 0) {
               project.current = sumCardsCurrent.sumCurrents;
-              console.log(sumCardsCurrent.sumCurrents);
               reRenderProjectCurrent();
               addProjectListToDb();
             } else if (sumCardsCurrent.sumCurrents == 0) {
@@ -162,6 +253,33 @@ export default function Projects(props) {
     } else {
       alert("Project name cant be empty");
     }
+  }
+
+  function deleteProject(id) {
+    try {
+      const updatedProjectList = projectList.filter((item) => item.id !== id);
+      addToProjectList(updatedProjectList);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  function editProject(editedProject, id) {
+    const newList = projectList.map((item) => {
+      if (item.id === id) {
+        const updatedItem = {
+          ...item,
+          name: editedProject.newName,
+          limit: editedProject.newLimit,
+        };
+
+        return updatedItem;
+      }
+
+      return item;
+    });
+
+    addToProjectList(newList);
   }
 
   function selectProject(i) {
@@ -211,7 +329,6 @@ export default function Projects(props) {
           projectList.map((project, index) => {
             return (
               <div onClick={() => selectProject(index)} key={project.id} className="project-container">
-                {console.log(project.current)}
                 <Project
                   key={project.id}
                   id={project.id}
@@ -219,6 +336,8 @@ export default function Projects(props) {
                   limit={project.limit}
                   createdAt={project.createdAt}
                   getProjectCurrent={project.current}
+                  handleDelete={deleteProject}
+                  handleEdit={editProject}
                 />
               </div>
             )

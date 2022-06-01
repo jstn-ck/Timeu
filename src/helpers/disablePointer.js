@@ -1,3 +1,4 @@
+// Disables pointer events out of modal windows
 export function disablePointer(disable) {
     const rootContainer = document.querySelectorAll('.dashboard')[0];
 

@@ -36,7 +36,8 @@
   &.All,
   &.Task,
   &.Bug,
-  &.Feature {
+  &.Feature,
+  &.Done {
     display: flex;
   }
 
@@ -61,6 +62,12 @@
   &.Bug {
     .card-category {
       color: var(--red-2);
+    }
+  }
+
+  &.Done {
+    .card-category {
+      color: #39be10;
     }
   }
 

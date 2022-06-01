@@ -1,3 +1,4 @@
+import moment from "moment-with-locales-es6";
 import React, { useEffect, useRef, useState } from "react";
 import "./timer.scss";
 
@@ -5,6 +6,7 @@ function Timer(props) {
   const [timer, setTimer] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [isTimerActive, setIsTimerActive] = useState(props.timerActive);
+  const [timerStart, setTimerStart] = useState('');
   // Use Ref does not cause re render after every update, is needed because timer is already re rendering component
   const countRef = useRef(null);
   // Get progressbar as dom element, individually for each card
@@ -14,17 +16,14 @@ function Timer(props) {
     if (props.timerActive !== isTimerActive) {
       setIsTimerActive(props.timerActive);
     }
-  }, [props.timerActive]);
 
-  useEffect(() => {
     startTimerIfActive()
-  }, [props.timerActive])
+  }, [props.timerActive]);
 
   useEffect(() => {
     calculateProgress();
     if (isActive) {
       pBarRef.current.style.width = calculateProgPxPerSecond() + "px";
-      console.log(parseFloat(pBarRef.current.style.width))
     }
 
     // Dont let progressbar go further than max width
@@ -32,6 +31,21 @@ function Timer(props) {
       pBarRef.current.style.width = "225px";
     }
   })
+
+  useEffect(() => {
+    if (isTimerActive == true) {
+      setTimeAfterReset();
+    }
+  }, [props.timerStartTime])
+
+  function setTimeAfterReset() {
+    if (props.timerStartTime != "" && props.timerStartTime != undefined) {
+      const dateNow = moment();
+      // Gets the difference of now and timer started in seconds (JSON.parse to add to database)
+      const timerDiffInSeconds = dateNow.diff(JSON.parse(props.timerStartTime), 'seconds');
+      setTimer(timer + timerDiffInSeconds);
+    }
+  }
 
   function calculateProgPxPerSecond() {
     let progressBarMaxWidth = 225;
@@ -79,7 +93,7 @@ function Timer(props) {
 
     if (!isActive) {
       countRef.current = setInterval(() => {
-        setTimer((timer) => timer + 80)
+        setTimer((timer) => timer + 1)
       }, 1000)
     }
   }
@@ -98,12 +112,20 @@ function Timer(props) {
     props.getTimeFromTimer(0);
   }
 
+  function saveTimerStart() {
+    setTimerStart(moment());
+    props.saveTimerStartTime('' + moment());
+    const a = '' + moment();
+    const b = moment();
+    console.log(b.diff(JSON.parse(a)))
+  }
+
   return (
     <div className='timer'>
       <div ref={pBarRef} className="timer-progressbar"></div>
       <p className="time">{formatTime(timer)}</p>
       <div className='timer-buttons'>
-        <button className={`${isActive ? "active" : ""}`} disabled={isActive} onClick={handleStart}>Start</button>
+        <button className={`${isActive ? "active" : ""}`} disabled={isActive} onClick={() => { handleStart(); saveTimerStart(); }}>Start</button>
         <button className={`${isActive ? "" : "active"}`}
           onClick={() => { props.getTimeFromTimer(getTimeInHours(timer)); handlePause(); }}>
           Pause

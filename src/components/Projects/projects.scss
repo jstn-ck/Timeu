@@ -88,6 +88,26 @@
             opacity: 1;
         }
     }
+
+    &:hover {
+        &::before {
+            opacity: .4;
+        }
+
+        &.selected {
+            &::before {
+                opacity: 1;
+            }
+        }
+
+        .project-time {
+            opacity: 0;
+        }
+
+        .project-controls {
+            transform: scale(1);
+        }
+    }
 }
 
 .projects {
@@ -104,7 +124,8 @@
         width: 100%;
         border-radius: 5px;
 
-        .project-time {
+        .project-time,
+        .project-controls {
             display: inline-block;
             text-overflow: unset;
             padding: 2px 4px;
@@ -119,9 +140,31 @@
             font-size: 13px;
             line-height: 1;
             font-weight: 600;
+            transition: opacity 0.2s ease;
+            opacity: 1;
 
             .project-current {
                 color: var(--grey-2);
+            }
+        }
+
+        .project-controls {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            top: 7px;
+            right: -11px;
+            transform: scale(0);
+            transition: 0.2s ease;
+
+            .edit-container,
+            .delete-container {
+                padding: 0 5px;
+            }
+
+            svg {
+                max-width: 15px;
+                fill: var(--grey-2);
             }
         }
     }
@@ -143,8 +186,17 @@
     transform: translate(-50%, -50%);
     pointer-events: all;
 
-    &.delete-card-modal {
+    &.delete-card-modal,
+    &.delete-project-modal {
         max-height: 150px;
+    }
+
+    &.edit-card-modal {
+        max-height: 400px;
+    }
+
+    &.edit-project-modal {
+        max-height: 300px;
     }
 
     .modal-content {
@@ -175,7 +227,9 @@
     &.new-project-modal,
     &.new-card-modal,
     &.delete-card-modal,
-    &.edit-card-modal {
+    &.edit-card-modal,
+    &.edit-project-modal,
+    &.delete-project-modal {
 
         h2,
         h3,

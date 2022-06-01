@@ -21,7 +21,11 @@ export const CardWithTimer = (props) => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [getTimerActiveCard, setTimerActiveCard] = useState(props.timerActive);
-  const [editedCardDesc, setEditedCardDesc] = useState('');
+  const [editedCardDesc, setEditedCardDesc] = useState(props.description);
+  const [editedCardName, setEditedCardName] = useState(props.name);
+  const [editedCardCateg, setEditedCardCateg] = useState(props.category);
+  const [editedCardLimit, setEditedCardLimit] = useState(props.limit);
+  const [timerStartTime, setTimerStartTime] = useState(props.timerStartTime);
 
   useEffect(() => {
     if (props.timerActive !== getTimerActiveCard) {
@@ -38,6 +42,14 @@ export const CardWithTimer = (props) => {
     }
   }, [props.getCurrent])
 
+  useEffect(() => {
+    if (props.timerActive == true) {
+      if (props.timerStartTime != "") {
+        setTimerStartTime(props.timerStartTime);
+      }
+    }
+  })
+
   const handleTimerActive = (setTimerActive) => {
     props.handleTimerActive(setTimerActive, props.id);
   }
@@ -53,6 +65,12 @@ export const CardWithTimer = (props) => {
     if (timeInHours == 0) {
       props.getCurrentFromCard(0, props.id);
       setCardCurrent(0);
+    }
+  }
+
+  const saveStartTime = (timerStart) => {
+    if (timerStart) {
+      props.addTimerStartToCard(timerStart, props.id);
     }
   }
 
@@ -77,7 +95,10 @@ export const CardWithTimer = (props) => {
   function handleEdit(id) {
     if (openEditModal) {
       const updatedItemValues = {
+        newName: editedCardName,
         newDesc: editedCardDesc,
+        newCateg: editedCardCateg,
+        newLimit: editedCardLimit,
       }
 
       props.handleEdit(updatedItemValues, id);
@@ -107,16 +128,43 @@ export const CardWithTimer = (props) => {
         </div>
         <div className={`modal edit-card-modal ${openEditModal ? 'open' : ''}`}>
           <div className="modal-content">
-            <h2>Edit Card</h2>
-            <h3>Enter new Card description</h3>
-            <input
-              type="text"
-              className="input"
-              maxLength={50}
-              value={editedCardDesc}
-              onChange={(e) => setEditedCardDesc(e.target.value)}
-              placeholder="Enter New Card description"
-            />
+            <div className="input-container">
+              <h2>Edit Card</h2>
+              <input
+                type="text"
+                className="input"
+                maxLength={50}
+                value={editedCardName}
+                onChange={(e) => setEditedCardName(e.target.value)}
+                placeholder="Enter new Card name"
+              />
+              <h3>Enter new Card description</h3>
+              <input
+                type="text"
+                className="input"
+                maxLength={50}
+                value={editedCardDesc}
+                onChange={(e) => setEditedCardDesc(e.target.value)}
+                placeholder="Enter New Card description"
+              />
+              <h3>Select a new category</h3>
+              <select value={editedCardCateg} onChange={(e) => setEditedCardCateg(e.target.value)}
+                name="category" className="category-select">
+                <option value="All">All</option>
+                <option value="Feature">Feature</option>
+                <option value="Task">Task</option>
+                <option value="Bug">Bug</option>
+                <option value="Done">Done</option>
+              </select>
+              <h4>Enter a new Card time limit in hours</h4>
+              <input
+                type="number"
+                className="input"
+                value={editedCardLimit}
+                onChange={(e) => setEditedCardLimit(parseInt(e.target.value))}
+                placeholder="Card limit in h"
+              />
+            </div>
             <div className="btn-container">
               <button onClick={handleEditModal} className='btn-cancel'>Cancel</button>
               <button onClick={(e) => { handleEdit(props.id) }} className='btn-create'>Save</button>
@@ -147,7 +195,7 @@ export const CardWithTimer = (props) => {
       </div>
 
       <Timer getCardId={props.getCardId} getTimeFromTimer={getTime} timerActive={getTimerActiveCard}
-        handleTimerActive={handleTimerActive} cardLimit={props.limit}
+        handleTimerActive={handleTimerActive} cardLimit={props.limit} saveTimerStartTime={saveStartTime} timerStartTime={timerStartTime}
       />
     </div>
   )
@@ -264,6 +312,18 @@ export function Cards() {
     }
   }
 
+  function timerStartToCard(startTime, cardId) {
+    console.log(startTime, cardId);
+    if (cardList) {
+      cardList.map((card) => {
+        if (card.id == cardId) {
+          card.timerStartTime = startTime;
+          addCardListToDb();
+        }
+      })
+    }
+  }
+
   // Add, add-card button to titlebar (for fixed positioning)
   const addCardBtn = document.querySelectorAll('.add-card')[0];
   const titleBar = document.querySelectorAll('.titlebar')[0];
@@ -304,8 +364,8 @@ export function Cards() {
       id: generateUid(),
       timerActive: false,
       timer: 0,
-      timerStartTime: "",
-      createdAt: moment().format('l, LT')
+      timerStartTime: '',
+      createdAt: moment().format('l, LT'),
     }]
 
     if (cardName !== "") {
@@ -329,13 +389,14 @@ export function Cards() {
   }
 
   function editCard(editedCard, id) {
-    //...item update here
-    console.log(editedCard);
     const newList = cardList.map((item) => {
       if (item.id === id) {
         const updatedItem = {
           ...item,
           desc: editedCard.newDesc,
+          name: editedCard.newName,
+          limit: editedCard.newLimit,
+          category: editedCard.newCateg,
         };
 
         return updatedItem;
@@ -430,6 +491,8 @@ export function Cards() {
                   handleTimerActive={handleTimerActive}
                   handleDelete={deleteCard}
                   handleEdit={editCard}
+                  timerStartTime={card.timerStartTime}
+                  addTimerStartToCard={timerStartToCard}
                 />
               )
             }
