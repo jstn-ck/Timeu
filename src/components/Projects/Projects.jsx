@@ -19,12 +19,21 @@ export const Project = (props) => {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [editedProjectName, setEditedProjectName] = useState(props.name);
   const [editedProjectLimit, setEditedProjectLimit] = useState(props.limit);
+  const currentRef = React.createRef();
 
   useEffect(() => {
     if (props.getProjectCurrent !== projectCurrent) {
       setProjectCurrent(props.getProjectCurrent);
     } else if (props.getProjectCurrent == 0) {
       setProjectCurrent(0);
+    }
+
+    // Red current if over limit, green if under Limit
+    if (projectCurrent > 0 && projectCurrent > props.limit && props.limit != 0) {
+      currentRef.current.classList.add('red');
+    } else if (projectCurrent > 0 && props.limit != 0) {
+      currentRef.current.classList.remove('red');
+      currentRef.current.classList.add('green');
     }
   })
 
@@ -109,7 +118,7 @@ export const Project = (props) => {
       </div>
       <span className='project-name'>{props.name}</span>
       <span className='project-time'>
-        <span className="project-current">{projectCurrent}h</span>
+        <span ref={currentRef} className="project-current"><span className='current-num'>{projectCurrent}h</span></span>
         <span className="project-time-seperator"> | </span>
         <span className="project-limit">{props.limit}h</span>
       </span>
@@ -177,6 +186,7 @@ export default function Projects(props) {
       }
     } catch (err) {
       console.error(err);
+      alert('Couldnt connect to Database!');
     }
   }
 

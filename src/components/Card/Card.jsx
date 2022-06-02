@@ -26,6 +26,7 @@ export const CardWithTimer = (props) => {
   const [editedCardCateg, setEditedCardCateg] = useState(props.category);
   const [editedCardLimit, setEditedCardLimit] = useState(props.limit);
   const [timerStartTime, setTimerStartTime] = useState(props.timerStartTime);
+  const currentRef = React.createRef();
 
   useEffect(() => {
     if (props.timerActive !== getTimerActiveCard) {
@@ -47,6 +48,14 @@ export const CardWithTimer = (props) => {
       if (props.timerStartTime != "") {
         setTimerStartTime(props.timerStartTime);
       }
+    }
+
+    // Red current if over limit, green if under Limit
+    if (cardCurrent > 0 && cardCurrent > props.limit && props.limit != 0) {
+      currentRef.current.classList.add('red');
+    } else if (cardCurrent > 0 && props.limit != 0) {
+      currentRef.current.classList.remove('red');
+      currentRef.current.classList.add('green');
     }
   })
 
@@ -189,7 +198,7 @@ export const CardWithTimer = (props) => {
       <h2 className="card-name">{props.name}</h2>
       <p className="card-desc">{props.description}</p>
       <div className="card-times">
-        <span className="card-current"><strong>Current:</strong> {cardCurrent}h</span>
+        <span ref={currentRef} className="card-current"><strong>Current:</strong> <span className="current-num">{cardCurrent}h</span></span>
         <span className="seperator"> | </span>
         <span className="card-limit"><strong>Limit:</strong> {props.limit}h</span>
       </div>
@@ -240,6 +249,7 @@ export function Cards() {
         await query.update({ cardList });
       }
     } catch (err) {
+      alert('Couldnt connect to database!');
       console.error(err);
     }
   }

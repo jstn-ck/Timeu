@@ -22,10 +22,11 @@ function Timer(props) {
 
   useEffect(() => {
     calculateProgress();
+    colorizeProgBar();
+
     if (isActive) {
       pBarRef.current.style.width = calculateProgPxPerSecond() + "px";
     }
-
     // Dont let progressbar go further than max width
     if (parseFloat(pBarRef.current.style.width) >= 225) {
       pBarRef.current.style.width = "225px";
@@ -37,6 +38,22 @@ function Timer(props) {
       setTimeAfterReset();
     }
   }, [props.timerStartTime])
+
+  function colorizeProgBar() {
+    if (parseFloat(pBarRef.current.style.width) >= 5) {
+      if (parseFloat(pBarRef.current.style.width) >= 95) {
+        pBarRef.current.classList.add('yellow');
+      }
+      if (parseFloat(pBarRef.current.style.width) >= 140) {
+        pBarRef.current.classList.remove('yellow');
+        pBarRef.current.classList.add('orange');
+      }
+      if (parseFloat(pBarRef.current.style.width) >= 175) {
+        pBarRef.current.classList.remove('orange');
+        pBarRef.current.classList.add('red');
+      }
+    }
+  }
 
   function setTimeAfterReset() {
     if (props.timerStartTime != "" && props.timerStartTime != undefined) {
@@ -93,7 +110,7 @@ function Timer(props) {
 
     if (!isActive) {
       countRef.current = setInterval(() => {
-        setTimer((timer) => timer + 1)
+        setTimer((timer) => timer + 80)
       }, 1000)
     }
   }
@@ -115,9 +132,6 @@ function Timer(props) {
   function saveTimerStart() {
     setTimerStart(moment());
     props.saveTimerStartTime('' + moment());
-    const a = '' + moment();
-    const b = moment();
-    console.log(b.diff(JSON.parse(a)))
   }
 
   return (
