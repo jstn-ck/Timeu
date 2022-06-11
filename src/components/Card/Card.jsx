@@ -246,7 +246,7 @@ export function Cards() {
       userRef.get().then((doc) => {
         if (doc.exists) {
           if (!doc.data().cardList) {
-            userRef.set({ cardList });
+            userRef.update({ cardList });
           } else if (doc.data().cardList) {
             userRef.update({ cardList });
           }

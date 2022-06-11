@@ -183,7 +183,7 @@ export default function Projects(props) {
       userRef.get().then((doc) => {
         if (doc.exists) {
           if (!doc.data().projectList) {
-            userRef.set({ projectList });
+            userRef.update({ projectList });
           } else if (doc.data().projectList) {
             userRef.update({ projectList });
           }
