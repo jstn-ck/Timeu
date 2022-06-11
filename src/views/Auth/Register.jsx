@@ -2,7 +2,6 @@ import { auth, db } from '@/firebase/firebase';
 import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
-// import { signInWithGoogle } from './Login';
 import "./auth.scss";
 import { ErrorModal } from '@/components/ErrorModal/ErrorModal';
 
@@ -10,13 +9,13 @@ const registerWithEmailAndPassword = async (email, password) => {
   try {
     const res = await auth.createUserWithEmailAndPassword(email, password);
     const user = res.user;
-    await db.collection("users").add({
-      uid: user.uid,
-      authProvider: "local",
-      email,
-    });
+    await db.collection("users").doc(user.uid).set(
+      {
+        email: user.email
+      }
+    );
   } catch (err) {
-    if(err) {
+    if (err) {
       ErrorModal('User exists already');
     }
   }

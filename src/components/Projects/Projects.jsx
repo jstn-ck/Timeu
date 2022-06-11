@@ -31,7 +31,7 @@ export const Project = (props) => {
     // Red current if over limit, green if under Limit
     if (projectCurrent > 0 && projectCurrent > props.limit && props.limit != 0) {
       currentRef.current.classList.add('red');
-    } else if (projectCurrent > 0 && props.limit != 0) {
+    } else if (projectCurrent >= 0 && props.limit != 0) {
       currentRef.current.classList.remove('red');
       currentRef.current.classList.add('green');
     }
@@ -142,6 +142,7 @@ export default function Projects(props) {
   const [projectName, setProjectName] = useState("");
   const [projectLimit, setProjectLimit] = useState(0);
   const { setSelectedProject } = useContext(SelectedProjectContext);
+  const [selectedProjectId, selectProjectId] = useState("");
   const { sumCardsCurrent } = useContext(SumCardsCurrentTimesContext);
   const [reRenderProjects, doReRenderProjects] = useState(false);
 
@@ -178,12 +179,19 @@ export default function Projects(props) {
 
   async function addProjectListToDb() {
     try {
-      const userRef = db.collection("users");
-      const query = userRef.doc(user?.uid)
-
-      if (query != undefined && projectList.length > 0) {
-        await query.update({ projectList });
-      }
+      const userRef = db.collection("users").doc(user?.uid);
+      userRef.get().then((doc) => {
+        if (doc.exists) {
+          if (!doc.data().projectList) {
+            userRef.set({ projectList });
+          } else if (doc.data().projectList) {
+            userRef.update({ projectList });
+          }
+        } else {
+          // doc.data() will be undefined
+          console.log("No Projects in document DB!");
+        }
+      })
     } catch (err) {
       console.error(err);
       alert('Couldnt connect to Database!');
@@ -212,16 +220,22 @@ export default function Projects(props) {
 
   function updateProjectCurrent() {
     if (projectList.length > 0) {
-      if (sumCardsCurrent.cardProjectId != "") {
+      if (sumCardsCurrent.cardProjectId != "" && sumCardsCurrent.sumCurrents != 0) {
         projectList.map((project) => {
           if (project.id == sumCardsCurrent.cardProjectId) {
             if (sumCardsCurrent.sumCurrents > 0) {
               project.current = sumCardsCurrent.sumCurrents;
               reRenderProjectCurrent();
               addProjectListToDb();
-            } else if (sumCardsCurrent.sumCurrents == 0) {
-              project.current = 0;
             }
+          }
+        })
+      } else if (sumCardsCurrent.sumCurrents == 0) {
+        projectList.map((project) => {
+          if (project.id == selectedProjectId) {
+            project.current = 0;
+            reRenderProjectCurrent();
+            addProjectListToDb();
           }
         })
       }
@@ -294,6 +308,7 @@ export default function Projects(props) {
 
   function selectProject(i) {
     setSelectedProject(projectList[i].id);
+    selectProjectId(projectList[i].id);
     const pContainer = document.querySelectorAll('.project-container');
     pContainer.forEach((item) => {
       item.classList.remove('selected');

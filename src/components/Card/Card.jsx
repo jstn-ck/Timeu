@@ -53,7 +53,7 @@ export const CardWithTimer = (props) => {
     // Red current if over limit, green if under Limit
     if (cardCurrent > 0 && cardCurrent > props.limit && props.limit != 0) {
       currentRef.current.classList.add('red');
-    } else if (cardCurrent > 0 && props.limit != 0) {
+    } else if (cardCurrent >= 0 && props.limit != 0) {
       currentRef.current.classList.remove('red');
       currentRef.current.classList.add('green');
     }
@@ -242,15 +242,22 @@ export function Cards() {
 
   async function addCardListToDb() {
     try {
-      const userRef = db.collection("users");
-      const query = userRef.doc(user?.uid)
-
-      if (query != undefined && cardList.length > 0) {
-        await query.update({ cardList });
-      }
+      const userRef = db.collection("users").doc(user?.uid);
+      userRef.get().then((doc) => {
+        if (doc.exists) {
+          if (!doc.data().cardList) {
+            userRef.set({ cardList });
+          } else if (doc.data().cardList) {
+            userRef.update({ cardList });
+          }
+        } else {
+          // doc.data() will be undefined
+          console.log("No Cards in document DB!");
+        }
+      })
     } catch (err) {
-      alert('Couldnt connect to database!');
       console.error(err);
+      alert('Couldnt connect to Database!');
     }
   }
 
@@ -266,7 +273,7 @@ export function Cards() {
     sumCardCurrentTimes();
   }, [selectedProject])
 
-  function sumCardCurrentTimes() {
+  function sumCardCurrentTimes(cards) {
     if (selectedProject) {
       if (cardList.length > 0) {
         let sumCurrents = 0;
@@ -280,6 +287,19 @@ export function Cards() {
           }
         })
         setSumCardsCurrent({ sumCurrents, cardProjectId });
+      }
+      if (cards) {
+        if (cards.length >= 0) {
+          console.log('yes')
+          let sumCurrents = 0;
+          cards.map((card) => {
+            if (selectedProject == card.projectId) {
+              sumCurrents = +(sumCurrents + parseFloat(card.current)).toFixed(12);
+              cardProjectId = card.projectId;
+            }
+          })
+          setSumCardsCurrent({ sumCurrents, selectedProject });
+        }
       }
     }
   }
@@ -393,6 +413,7 @@ export function Cards() {
     try {
       const updatedCardList = cardList.filter((item) => item.id !== id);
       addToCardList(updatedCardList);
+      sumCardCurrentTimes(updatedCardList);
     } catch (e) {
       console.error(e);
     }
