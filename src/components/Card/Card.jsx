@@ -52,6 +52,7 @@ export const CardWithTimer = (props) => {
 
     // Red current if over limit, green if under Limit
     if (cardCurrent > 0 && cardCurrent > props.limit && props.limit != 0) {
+      currentRef.current.classList.remove('green');
       currentRef.current.classList.add('red');
     } else if (cardCurrent >= 0 && props.limit != 0) {
       currentRef.current.classList.remove('red');

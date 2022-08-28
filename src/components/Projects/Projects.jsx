@@ -30,6 +30,7 @@ export const Project = (props) => {
 
     // Red current if over limit, green if under Limit
     if (projectCurrent > 0 && projectCurrent > props.limit && props.limit != 0) {
+      currentRef.current.classList.remove('green');
       currentRef.current.classList.add('red');
     } else if (projectCurrent >= 0 && props.limit != 0) {
       currentRef.current.classList.remove('red');

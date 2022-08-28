@@ -1,4 +1,4 @@
-export function generateUid () {
+export function generateUid() {
   // Math.random should be unique because of its seeding algorithm.
   // To make it unique use js date object + math random to generate unique numbers
   // Its only not 100% unique if you are generating more than a million ids in a milisecond
