@@ -1,5 +1,5 @@
 import moment from "moment-with-locales-es6";
-import React, { useEffect, useRef, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import "./timer.scss";
 
 function Timer(props) {
@@ -7,6 +7,7 @@ function Timer(props) {
   const [isActive, setIsActive] = useState(false);
   const [isTimerActive, setIsTimerActive] = useState(props.timerActive);
   const [timerStart, setTimerStart] = useState('');
+  const [resetModal, openResetModal] = useState(false);
   // Use Ref does not cause re render after every update, is needed because timer is already re rendering component
   const countRef = useRef(null);
   // Get progressbar as dom element, individually for each card
@@ -56,7 +57,7 @@ function Timer(props) {
   }
 
   function setTimeAfterReset() {
-    if (props.timerStartTime != "" && props.timerStartTime != undefined) {
+    if (props.timerStartTime !== "" && props.timerStartTime !== undefined) {
       const dateNow = moment();
       // Gets the difference of now and timer started in seconds (JSON.parse to add to database)
       const timerDiffInSeconds = dateNow.diff(JSON.parse(props.timerStartTime), 'seconds');
@@ -68,23 +69,21 @@ function Timer(props) {
     let progressBarMaxWidth = 225;
 
     // Calculates the pixel that progressBar needs per second depending on card limit
-    if (props.cardLimit != undefined) {
+    if (props.cardLimit !== undefined) {
       const limitInSeconds = props.cardLimit * 60 * 60;
       const percentageFromLimit = 1 / limitInSeconds;
       const pxPerSecond = percentageFromLimit * progressBarMaxWidth;
       const timerInSeconds = getTimeInHours(timer) * 60 * 60;
-      const currentPxPerSecond = timerInSeconds * pxPerSecond;
-
-      return currentPxPerSecond;
+      return timerInSeconds * pxPerSecond;
     }
   }
 
   function calculateProgress() {
     const progressBar = document.querySelectorAll('.timer-progressbar')[0];
 
-    if (props.timerActive == false && isActive == false) {
+    if (props.timerActive === false && isActive === false) {
       if (progressBar) {
-        if (props.cardLimit != undefined && props.cardLimit != 0) {
+        if (props.cardLimit !== undefined && props.cardLimit !== 0) {
           pBarRef.current.style.width = calculateProgPxPerSecond() + "px";
         }
       }
@@ -92,18 +91,18 @@ function Timer(props) {
   }
 
   const startTimerIfActive = async () => {
-    if (await isTimerActive == true) {
+    if (await isTimerActive === true) {
       setIsActive(true)
       handleStart();
       calculateProgress();
 
-    } else if (await isTimerActive == false) {
+    } else if (await isTimerActive === false) {
       clearInterval(countRef.current);
     }
   }
 
   const handleStart = () => {
-    if (isTimerActive == false) {
+    if (isTimerActive === false) {
       props.handleTimerActive(true);
       setIsActive(true);
     }
@@ -127,6 +126,9 @@ function Timer(props) {
     setIsActive(false);
     setTimer(0);
     props.getTimeFromTimer(0);
+    if (resetModal) {
+      openResetModal(false);
+    }
   }
 
   function saveTimerStart() {
@@ -139,12 +141,37 @@ function Timer(props) {
       <div ref={pBarRef} className="timer-progressbar"></div>
       <p className="time">{formatTime(timer)}</p>
       <div className='timer-buttons'>
-        <button className={`${isActive ? "active" : ""}`} disabled={isActive} onClick={() => { handleStart(); saveTimerStart(); }}>Start</button>
+        <button className={`${isActive ? "active" : ""}`} disabled={isActive} onClick={() => {
+          handleStart();
+          saveTimerStart();
+        }}>Start
+        </button>
         <button className={`${isActive ? "" : "active"}`}
-          onClick={() => { props.getTimeFromTimer(getTimeInHours(timer)); handlePause(); }}>
+                onClick={() => {
+                  props.getTimeFromTimer(getTimeInHours(timer));
+                  handlePause();
+                }}>
           Pause
         </button>
-        <button onClick={handleReset}>Reset</button>
+        <button onClick={() => {
+          openResetModal(true);
+        }}>Reset
+        </button>
+        <div className={`modal reset-timer-modal ${resetModal ? 'open' : ''}`}>
+          <div className="modal-content">
+            <h2>Reset Timer ?</h2>
+            <div className="btn-container">
+              <button onClick={() => {
+                openResetModal(false)
+              }} className='btn-cancel'>Cancel
+              </button>
+              <button onClick={(e) => {
+                handleReset()
+              }} className='btn-reset'>Reset
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -152,8 +179,7 @@ function Timer(props) {
 
 const getTimeInHours = (timer) => {
   // toFixed formats decimal with 2 numbers
-  const timeInHours = `${(timer / 60 / 60).toFixed(2)}`;
-  return timeInHours;
+  return `${(timer / 60 / 60).toFixed(2)}`;
 }
 
 const formatTime = (timer) => {

@@ -77,6 +77,5 @@ const userSettings = app.getPath('userData');
 
 ipcMain.on('get-settings-path', (event, key) => {
   console.log(`Main process recieved ${key}.`);
-  const value = userSettings;
-  event.sender.send('response', value);
+  event.sender.send('response', userSettings);
 });
